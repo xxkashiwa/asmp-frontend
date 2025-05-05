@@ -1,5 +1,4 @@
 import React from 'react';
-
 const AlumniManagement: React.FC = () => {
   return (
     <div className="w-full">

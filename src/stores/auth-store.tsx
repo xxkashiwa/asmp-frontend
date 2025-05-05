@@ -13,6 +13,7 @@ const useAuthStore = create<AuthStoreState>()(
     (set) => ({
       accessToken: null,
       isAuthenticated: false,
+      isAdmin: false,
       setAccessToken: token => {
         set({ accessToken: token });
       },
@@ -24,7 +25,7 @@ const useAuthStore = create<AuthStoreState>()(
       name: 'auth-store',
       partialize: state => ({ 
         accessToken: state.accessToken,
-        isAuthenticated: state.isAuthenticated 
+        isAuthenticated: state.isAuthenticated,
       }),
     }
   )
