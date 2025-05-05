@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 interface AuthStoreState {
   isAuthenticated: boolean;
   accessToken: string | null;
@@ -9,9 +10,9 @@ interface AuthStoreState {
 
 const useAuthStore = create<AuthStoreState>()(
   persist(
-    set => ({
+    (set) => ({
       accessToken: null,
-      isAuthenticated: true,
+      isAuthenticated: false,
       setAccessToken: token => {
         set({ accessToken: token });
       },
@@ -21,7 +22,10 @@ const useAuthStore = create<AuthStoreState>()(
     }),
     {
       name: 'auth-store',
-      partialize: state => ({ accessToken: state.accessToken }),
+      partialize: state => ({ 
+        accessToken: state.accessToken,
+        isAuthenticated: state.isAuthenticated 
+      }),
     }
   )
 );
