@@ -1,24 +1,31 @@
+import {
+  LayoutDashboard,
+  Users,
+  Building2,
+  Calendar,
+  Newspaper,
+  Gift,
+  Handshake
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import useAuthStore from '@/stores/auth-store';
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-// Define sidebar navigation items
 type NavItem = {
   title: string;
   path: string;
   icon?: React.ReactNode; // For future icon support
 };
-
 const navItems: NavItem[] = [
-  { title: '仪表盘', path: '/' },
-  { title: '校友管理', path: '/alumni' },
-  { title: '组织管理', path: '/organizations' },
-  { title: '活动管理', path: '/events' },
-  { title: '高校动态', path: '/campus-news' },
-  { title: '捐赠管理', path: '/donations' },
-  { title: '合作伙伴', path: '/partnerships' },
+  { title: '仪表盘', path: '/', icon: <LayoutDashboard className="w-4 h-4" /> },
+  { title: '校友管理', path: '/alumni', icon: <Users className="w-4 h-4" /> },
+  { title: '组织管理', path: '/organizations', icon: <Building2 className="w-4 h-4" /> },
+  { title: '活动管理', path: '/events', icon: <Calendar className="w-4 h-4" /> },
+  { title: '高校动态', path: '/campus-news', icon: <Newspaper className="w-4 h-4" /> },
+  { title: '捐赠管理', path: '/donations', icon: <Gift className="w-4 h-4" /> },
+  { title: '合作伙伴', path: '/partnerships', icon: <Handshake className="w-4 h-4" /> },
 ];
 
 interface SidebarProps {

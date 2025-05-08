@@ -107,7 +107,7 @@ export function AlumniTable({
         onClose={() => setAlumniToEdit(undefined)}
         onSubmit={handleEditSubmit}
         alumni={alumniToEdit}
-        title="编辑校友"
+        title="编辑校友"  
         description="修改校友信息，带 * 的字段为必填项。"
       />
 
