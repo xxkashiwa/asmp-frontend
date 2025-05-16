@@ -17,27 +17,28 @@ interface NewsActionsProps {
   onDelete: (news: News) => void;
 }
 
-export function NewsActions({ row, onEdit, onDelete }: NewsActionsProps) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">打开菜单</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>操作</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onEdit(row)}>
-          <Edit className="mr-2 h-4 w-4" />
-          编辑
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onDelete(row)}>
-          <Trash className="mr-2 h-4 w-4" />
-          删除
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+export function NewsActions({row, onEdit, onDelete}: NewsActionsProps){
+    return(
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant='ghost' className='h-8 w-8'>
+                    <span className='sr-only'>打开菜单</span>
+                    <MoreHorizontal className='h-4 w-4' />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+                <DropdownMenuLabel>操作</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => onEdit(row)}>
+                    <Edit className='mr-2 h-4 w-4' />
+                    编辑
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onDelete(row)}>
+                    <Trash className='mr-2 h-4 w-4' />
+                    删除
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+
+    )
 }

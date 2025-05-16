@@ -1,3 +1,4 @@
+// 导入必要的组件和工具
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -20,6 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+// 定义表单验证模式
 const formSchema = z.object({
   donorName: z.string().min(1, '请输入捐赠人姓名'),
   amount: z.coerce.number().min(0, '捐赠金额必须大于0'),
@@ -33,27 +35,30 @@ const formSchema = z.object({
 
 type DonationFormValues = z.infer<typeof formSchema>;
 
+// 定义组件属性接口
 interface DonationFormProps {
-  donation?: Donation;
-  onSubmit: (data: DonationFormValues) => void;
+  donation?: Donation;           // 可选的捐赠数据，用于编辑模式
+  onSubmit: (data: DonationFormValues) => void;  // 表单提交处理函数
 }
 
+// 捐赠表单组件
 export function DonationForm({ donation, onSubmit }: DonationFormProps) {
   const form = useForm<DonationFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      donorName: donation?.donorName ,
-      amount: donation?.amount ,
-      projectName: donation?.projectName ,
-      donationDate: donation?.donationDate ,
+      donorName: donation?.donorName,
+      amount: donation?.amount,
+      projectName: donation?.projectName,
+      donationDate: donation?.donationDate,
       purpose: donation?.purpose,
-      status: donation?.status ,
-      thanksLetterSent: donation?.thanksLetterSent ,
+      status: donation?.status,
+      thanksLetterSent: donation?.thanksLetterSent,
     },
   });
 
   return (
     <Form {...form}>
+      {/* 表单主体，包含所有字段 */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}

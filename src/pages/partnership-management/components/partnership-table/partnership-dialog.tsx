@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog';
 import { Partnership } from '@/types';
 import { PartnershipForm } from './partnership-form';
-
+import { useState } from 'react';
 interface PartnershipDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -25,12 +25,16 @@ export function PartnershipDialog({
   description,
   partnership,
 }: PartnershipDialogProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = async (data: Omit<Partnership, 'id'>) => {
+    setIsLoading(true);
     try {
       await onSubmit(data);
       onClose();
     } catch (error) {
       console.error('Error submitting form:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,6 +49,7 @@ export function PartnershipDialog({
           initialData={partnership}
           onSubmit={handleSubmit}
           onCancel={onClose}
+          isLoading={isLoading}
         />
       </DialogContent>
     </Dialog>

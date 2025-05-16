@@ -18,12 +18,8 @@ import { EventDialog } from './event-dialog';
 
 // 搜索字段的中文映射
 const searchFieldLabels: Record<string, string> = {
-  name: '活动名称',
-  type: '活动类型',
-  startTime: '开始时间',
-  endTime: '结束时间',
+  title: '活动名称',
   location: '地点',
-  status: '状态',
   organizer: '组织者'
 };
 
@@ -80,7 +76,7 @@ export function EventTable({
       <DataTable
         columns={columns}
         data={data}
-        searchKeys={['name', 'type', 'location', 'status', 'organizer']}
+        searchKeys={['title',  'location',  'organizer']}
         searchLabel="搜索活动"
         searchFieldLabels={searchFieldLabels}
       />

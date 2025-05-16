@@ -19,12 +19,8 @@ export interface News {
   description?: string ;
   author: string;
   publishDate: string;
-  category: string;
+  category: '校园新闻' | '活动通知' | '学术动态' | '其他';
   isActive: boolean;
-  image?: {
-    url?: string ;
-    alt?: string ;
-  } ;
   views?: number;
 }
 
@@ -48,10 +44,9 @@ export interface Event {
   endDate: string;
   location: string;
   organizer: string;
-  capacity?: number;
   registrationDeadline?: string;
   status: 'upcoming' | 'ongoing' | 'completed' | 'cancelled';
-  type?: string;
+  type?: '校园活动' | '学术活动' | '社区活动' | '体育活动' | '文化活动' | '其他';
   maxParticipants?: number;
 }
 
@@ -62,29 +57,25 @@ export interface Organization {
   description: string;
   foundingDate: string;
   leader: string;
-  memberCount?: number;
   contactEmail?: string;
   contactPhone?: string;
   contact?: string;
   location?: string;
-  status?: string;
+  status: string;
+  memberCount?: number;
 }
 
 export interface Partnership {
   id: number;
   name: string;
-  type: string;
+  type: '企业合作' | '学术合作' | '研究合作' | '项目合作' | '其他';
   description: string;
-  cooperationStartDate?: string;
-  contactPerson?: string;
-  contactEmail?: string;
-  contactPhone?: string;
+  contactPerson: string;
+  contactEmail: string;
+  contactPhone: string;
   website?: string;
-  contact?: string;
-  phone?: string;
-  email?: string;
   address?: string;
   startDate?: string;
   endDate?: string;
-  status?: string;
+  status: '进行中' | '待启动' | '已完成' | '已终止';
 }

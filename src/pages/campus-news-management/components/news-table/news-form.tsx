@@ -26,15 +26,12 @@ const formSchema = z.object({
   title: z.string().min(1, '标题不能为空'),
   description: z.string().optional(),
   url: z.string().url('请输入有效的URL').optional(),
-  image: z.object({
-    url: z.string().url('请输入有效的图片URL').optional(),
-    alt: z.string().optional(),
-  }).optional(),
   isActive: z.boolean(),
   content: z.string(),
-  publishDate: z.string().min(1, '发布日期不能为空'),
+  publishDate: z.string().min(1, '请选择发布日期'),
   author: z.string().min(1, '作者不能为空'),
-  category: z.string().min(1, '分类不能为空'),
+  category: z.enum(['校园新闻', '活动通知', '学术动态', '其他']),
+  views: z.number().optional(), 
 });
 
 type NewsFormValues = z.infer<typeof formSchema>;
@@ -52,32 +49,20 @@ export function NewsForm({
   onCancel,
   isLoading = false,
 }: NewsFormProps) {
-  const defaultValues: Partial<NewsFormValues> = initialData
-    ? {
-        title: initialData.title,
-        description: initialData.description,
-        url: initialData.url,
-        image: initialData.image,
-        isActive: initialData.isActive,
-        publishDate: initialData.publishDate,
-        author: initialData.author,
-        category: initialData.category,
-      }
-    : {
-        title: '',
-        description: undefined,
-        url: undefined,
-        image: undefined,
-        isActive: false,
-        publishDate: new Date().toISOString().split('T')[0],
-        author: '',
-        category: '',
-      };
-
   const form = useForm<NewsFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
-  });
+    defaultValues: {
+      title: initialData?.title,
+      url: initialData?.url,
+      content: initialData?.content,
+      publishDate: initialData?.publishDate,
+      author: initialData?.author,
+      category: initialData?.category,
+      description: initialData?.description,
+      isActive: initialData?.isActive,
+      views: initialData?.views,
+    }
+  })
 
   return (
     <Form {...form}>
@@ -125,33 +110,7 @@ export function NewsForm({
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="image.url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>图片链接</FormLabel>
-                <FormControl>
-                  <Input placeholder="请输入图片链接" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
-          <FormField
-            control={form.control}
-            name="image.alt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>图片描述</FormLabel>
-                <FormControl>
-                  <Input placeholder="请输入图片描述" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
           <FormField
             control={form.control}
@@ -160,7 +119,7 @@ export function NewsForm({
               <FormItem>
                 <FormLabel>发布日期 *</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} />
+                  <Input {...field} type = 'date'/>
                 </FormControl>
                 <FormMessage />
               </FormItem>

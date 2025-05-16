@@ -26,7 +26,7 @@ const OrganizationManagement: React.FC = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-auto">
       <h1 className="mb-6 text-2xl font-bold">组织管理</h1>
       <div className="rounded-lg border bg-white p-6 shadow-sm">
         <p className="mb-4 text-gray-600">

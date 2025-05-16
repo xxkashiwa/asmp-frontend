@@ -22,6 +22,11 @@ export const getDonationColumns = (
   {
     accessorKey: 'projectName',
     header: '项目名称',
+    cell: ({ row }) => (
+      <span>
+        {row.original.projectName || '无'}
+      </span>
+    )
   },
   {
     accessorKey: 'donationDate',

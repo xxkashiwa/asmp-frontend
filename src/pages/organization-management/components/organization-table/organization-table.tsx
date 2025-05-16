@@ -19,11 +19,7 @@ import { OrganizationDialog } from './organization-dialog';
 // 搜索字段的中文映射
 const searchFieldLabels: Record<string, string> = {
   name: '组织名称',
-  type: '组织类型',
-  description: '描述',
-  foundedDate: '成立日期',
   location: '地点',
-  status: '状态',
   leader: '负责人'
 };
 
@@ -80,7 +76,7 @@ export function OrganizationTable({
       <DataTable
         columns={columns}
         data={data}
-        searchKeys={['name', 'type', 'location', 'status', 'leader']}
+        searchKeys={['name', 'location',  'leader']}
         searchLabel="搜索组织"
         searchFieldLabels={searchFieldLabels}
       />

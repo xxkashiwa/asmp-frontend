@@ -30,6 +30,7 @@ const Login: React.FC = () => {
     },
   });
 
+//记录登录状态
   const { setIsAuthenticated, setAccessToken } = useAuthStore();
   const navigate = useNavigate();
   const onSubmit = (data: FormData) => {
@@ -40,9 +41,10 @@ const Login: React.FC = () => {
   };
 
   return (
+//登录界面
     <div className="flex min-h-screen w-full items-center justify-center">
       <div className="mx-auto w-full max-w-md space-y-6 rounded-lg p-8 shadow-md">
-        <h1 className="mb-6 text-center text-2xl font-bold">登录</h1>
+        <h1 className="mb-6 text-center text-2xl font-bold">登录</h1>-
         <Form {...userForm}>
           <form
             onSubmit={userForm.handleSubmit(onSubmit)}

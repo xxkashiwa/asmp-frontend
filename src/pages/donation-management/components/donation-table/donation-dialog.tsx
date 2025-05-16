@@ -16,7 +16,7 @@ interface DonationDialogProps {
   title: string;
   description: string;
 }
-
+//添加捐赠对话框
 export function DonationDialog({
   isOpen,
   onClose,

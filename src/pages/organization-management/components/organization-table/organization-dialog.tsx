@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/dialog';
 import { Organization } from '@/types';
 import { OrganizationForm } from './organization-form';
+import { useState } from 'react';
 
 interface OrganizationDialogProps {
   isOpen: boolean;
@@ -25,12 +26,16 @@ export function OrganizationDialog({
   description,
   organization,
 }: OrganizationDialogProps) {
+  const [isLoading, setIsloading] = useState(false);
   const handleSubmit = async (data: Omit<Organization, 'id'>) => {
+    setIsloading(true);
     try {
       await onSubmit(data);
       onClose();
     } catch (error) {
       console.error('Error submitting form:', error);
+    } finally {
+      setIsloading(false);
     }
   };
 
@@ -45,6 +50,7 @@ export function OrganizationDialog({
           initialData={organization}
           onSubmit={handleSubmit}
           onCancel={onClose}
+          isLoading={isLoading}
         />
       </DialogContent>
     </Dialog>

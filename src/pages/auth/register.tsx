@@ -20,6 +20,7 @@ const passwordSchema = z
   .regex(/[A-Z]/, { message: '至少包含1个大写字母' })
   .regex(/[0-9]/, { message: '至少包含1个数字' });
 
+// 注册表单验证
 const formSchema = z
   .object({
     name: z.string().min(1, { message: '用户名不能为空' }),
@@ -48,6 +49,7 @@ const Register: React.FC = () => {
     console.log(data);
     navigate('/');
   };
+// 注册表单
   return (
     <div className="flex min-h-screen w-full items-center justify-center">
       <div className="w-full max-w-md space-y-6 rounded-lg p-8 shadow-md">

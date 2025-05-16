@@ -12,43 +12,54 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { Partnership } from '@/types';
 import * as z from 'zod';
 
 const formSchema = z.object({
   name: z.string().min(1, '请输入合作伙伴名称'),
-  type: z.string().min(1, '请选择合作类型'),
-  contact: z.string().min(1, '请输入联系人姓名'),
-  phone: z.string().min(1, '请输入联系电话'),
-  email: z.string().email('请输入有效的电子邮箱'),
-  address: z.string().min(1, '请输入地址'),
+  type: z.enum(['企业合作', '学术合作', '研究合作', '项目合作', '其他']),
   description: z.string().min(1, '请输入合作描述'),
+  contactPerson: z.string().min(1, '请输入联系人姓名'),
+  contactPhone: z.string().min(1, '请输入联系电话'),
+  contactEmail: z.string().email('请输入有效的电子邮箱'),
+  address: z.string().min(1, '请输入地址').optional(),
+  website: z.string().url('请输入有效的网址').optional(),
   startDate: z.string().min(1, '请选择合作开始日期'),
   endDate: z.string().min(1, '请选择合作结束日期'),
-  status: z.string().min(1, '请选择合作状态'),
+  status: z.enum(['进行中', '待启动', '已完成', '已终止']),
 });
 
 type PartnershipFormValues = z.infer<typeof formSchema>;
 
 interface PartnershipFormProps {
-  initialData?: Partial<PartnershipFormValues>;
+  initialData?: Partnership;
   onSubmit: (data: PartnershipFormValues) => void;
   onCancel: () => void;
+  isLoading?: boolean;
 }
 
 export function PartnershipForm({
   initialData,
   onSubmit,
   onCancel,
+  isLoading = false,
 }: PartnershipFormProps) {
-  const defaultValues: Partial<PartnershipFormValues> = initialData || {
-    type: '',
-    status: 'active',
-  };
-
   const form = useForm<PartnershipFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
-  });
+    defaultValues: {
+      name: initialData?.name ,
+      type: initialData?.type,
+      description: initialData?.description,
+      contactPerson: initialData?.contactPerson,
+      contactPhone: initialData?.contactPhone,
+      contactEmail: initialData?.contactEmail,
+      address: initialData?.address,
+      website: initialData?.website,
+      startDate: initialData?.startDate,
+      endDate: initialData?.endDate,
+      status: initialData?.status,
+    }
+  })
 
   return (
     <Form {...form}>
@@ -95,7 +106,7 @@ export function PartnershipForm({
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="contact"
+            name="contactPerson"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>联系人</FormLabel>
@@ -109,7 +120,7 @@ export function PartnershipForm({
 
           <FormField
             control={form.control}
-            name="phone"
+            name="contactPhone"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>联系电话</FormLabel>
@@ -125,7 +136,7 @@ export function PartnershipForm({
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="email"
+            name="contactEmail"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>电子邮箱</FormLabel>
@@ -151,6 +162,20 @@ export function PartnershipForm({
             )}
           />
         </div>
+
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>网站</FormLabel>
+              <FormControl>
+                <Input type="url" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -220,11 +245,18 @@ export function PartnershipForm({
           )}
         />
 
-        <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={onCancel}>
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
             取消
           </Button>
-          <Button type="submit">提交</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? '提交中...' : initialData ? '更新' : '添加'}
+          </Button>
         </div>
       </form>
     </Form>

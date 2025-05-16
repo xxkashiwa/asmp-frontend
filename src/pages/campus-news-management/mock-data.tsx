@@ -11,10 +11,7 @@ export const mockNewsData: News[] = [
     publishDate: '2024-01-15',
     category: '学术动态',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/research.jpg',
-      alt: '科研项目图片'
-    },
+
     views: 1520
   },
   {
@@ -25,12 +22,8 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/2',
     author: '体育部',
     publishDate: '2024-03-20',
-    category: '校园活动',
+    category: '校园新闻',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/sports.jpg',
-      alt: '运动会现场'
-    },
     views: 2340
   },
   {
@@ -43,10 +36,6 @@ export const mockNewsData: News[] = [
     publishDate: '2024-02-28',
     category: '学术动态',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/academic.jpg',
-      alt: '学术交流'
-    },
     views: 890
   },
   {
@@ -57,12 +46,8 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/4',
     author: '就业指导中心',
     publishDate: '2024-03-01',
-    category: '通知公告',
+    category: '活动通知',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/job-fair.jpg',
-      alt: '招聘会'
-    },
     views: 3150
   },
   {
@@ -73,12 +58,8 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/5',
     author: '图书馆',
     publishDate: '2024-02-10',
-    category: '通知公告',
+    category: '活动通知',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/library.jpg',
-      alt: '图书馆'
-    },
     views: 756
   },
   {
@@ -89,12 +70,8 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/6',
     author: '信息中心',
     publishDate: '2024-01-25',
-    category: '通知公告',
+    category: '活动通知',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/network.jpg',
-      alt: '网络设施'
-    },
     views: 1890
   },
   {
@@ -107,10 +84,6 @@ export const mockNewsData: News[] = [
     publishDate: '2024-03-05',
     category: '学术动态',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/competition.jpg',
-      alt: '比赛现场'
-    },
     views: 2100
   },
   {
@@ -121,12 +94,8 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/8',
     author: '人事处',
     publishDate: '2024-02-20',
-    category: '通知公告',
+    category: '活动通知',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/recruitment.jpg',
-      alt: '招聘信息'
-    },
     views: 1678
   },
   {
@@ -137,12 +106,8 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/9',
     author: '学工处',
     publishDate: '2024-03-15',
-    category: '校园活动',
+    category: '校园新闻',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/culture-festival.jpg',
-      alt: '文化节现场'
-    },
     views: 2450
   },
   {
@@ -155,11 +120,6 @@ export const mockNewsData: News[] = [
     publishDate: '2024-02-15',
     category: '学术动态',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/lab.jpg',
-      alt: '实验室'
-    },
-    views: 1230
   },
   {
     id: 11,
@@ -169,12 +129,9 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/11',
     author: '研究生院',
     publishDate: '2024-03-10',
-    category: '通知公告',
+    category: '活动通知',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/graduate.jpg',
-      alt: '研究生招生'
-    },
+
     views: 4200
   },
   {
@@ -185,12 +142,8 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/12',
     author: '后勤处',
     publishDate: '2024-01-30',
-    category: '通知公告',
+    category: '活动通知',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/smart-campus.jpg',
-      alt: '智慧校园'
-    },
     views: 1560
   },
   {
@@ -201,12 +154,8 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/13',
     author: '创新创业学院',
     publishDate: '2024-03-08',
-    category: '校园活动',
+    category: '校园新闻',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/innovation.jpg',
-      alt: '创新创业'
-    },
     views: 1890
   },
   {
@@ -217,12 +166,8 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/14',
     author: '团委',
     publishDate: '2024-03-12',
-    category: '校园活动',
+    category: '校园新闻',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/environment.jpg',
-      alt: '环保活动'
-    },
     views: 980
   },
   {
@@ -235,10 +180,7 @@ export const mockNewsData: News[] = [
     publishDate: '2024-02-25',
     category: '学术动态',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/cooperation.jpg',
-      alt: '签约仪式'
-    },
+    
     views: 1450
   },
   {
@@ -249,12 +191,9 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/16',
     author: '心理咨询中心',
     publishDate: '2024-03-18',
-    category: '通知公告',
+    category: '活动通知',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/mental-health.jpg',
-      alt: '心理健康'
-    },
+    
     views: 1120
   },
   {
@@ -265,12 +204,9 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/17',
     author: '保卫处',
     publishDate: '2024-03-21',
-    category: '通知公告',
+    category: '活动通知',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/safety.jpg',
-      alt: '安全月活动'
-    },
+    
     views: 890
   },
   {
@@ -281,12 +217,9 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/18',
     author: '校友会',
     publishDate: '2024-03-25',
-    category: '通知公告',
+    category: '活动通知',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/alumni-job.jpg',
-      alt: '校友招聘'
-    },
+    
     views: 2300
   },
   {
@@ -297,12 +230,9 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/19',
     author: '社团联合会',
     publishDate: '2024-03-28',
-    category: '校园活动',
+    category: '校园新闻',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/club-festival.jpg',
-      alt: '社团活动'
-    },
+    
     views: 1780
   },
   {
@@ -313,12 +243,9 @@ export const mockNewsData: News[] = [
     url: 'https://example.com/news/20',
     author: '图书馆',
     publishDate: '2024-03-30',
-    category: '校园活动',
+    category: '校园新闻',
     isActive: true,
-    image: {
-      url: 'https://example.com/images/reading.jpg',
-      alt: '读书活动'
-    },
+    
     views: 960
   }
 ];

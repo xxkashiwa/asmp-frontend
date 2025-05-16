@@ -17,13 +17,14 @@ import * as z from 'zod';
 const formSchema = z.object({
   name: z.string().min(1, '请输入组织名称'),
   type: z.string().min(1, '请选择组织类型'),
+  description: z.string().min(1, '请输入组织描述'),
+  foundingDate: z.string().min(1, '请选择成立日期'),
   leader: z.string().min(1, '请输入负责人姓名'),
   contact: z.string().min(1, '请输入联系方式'),
   location: z.string().min(1, '请输入所在地'),
-  description: z.string().min(1, '请输入组织描述'),
   status: z.string().min(1, '请选择组织状态'),
   memberCount: z.number().min(0, '成员数量不能为负数'),
-  foundingDate: z.string().min(1, '请选择成立日期'),
+
 });
 
 type OrganizationFormValues = z.infer<typeof formSchema>;
@@ -32,12 +33,14 @@ interface OrganizationFormProps {
   initialData?: Partial<OrganizationFormValues>;
   onSubmit: (data: OrganizationFormValues) => void;
   onCancel: () => void;
+  isLoading?: boolean;
 }
 
 export function OrganizationForm({
   initialData,
   onSubmit,
   onCancel,
+  isLoading = false,
 }: OrganizationFormProps) {
   const defaultValues: Partial<OrganizationFormValues> = initialData || {
     type: '',
@@ -195,8 +198,6 @@ export function OrganizationForm({
                 <SelectContent>
                   <SelectItem value="active">活跃</SelectItem>
                   <SelectItem value="inactive">不活跃</SelectItem>
-                  <SelectItem value="preparing">筹备中</SelectItem>
-                  <SelectItem value="dissolved">已解散</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -204,11 +205,18 @@ export function OrganizationForm({
           )}
         />
         </div>
-        <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={onCancel}>
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
             取消
           </Button>
-          <Button type="submit">提交</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? '提交中...' : initialData ? '更新' : '添加'}
+          </Button>
         </div>
       </form>
     </Form>

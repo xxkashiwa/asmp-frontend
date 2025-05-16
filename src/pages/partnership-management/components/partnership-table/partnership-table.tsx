@@ -19,11 +19,7 @@ import { PartnershipDialog } from './partnership-dialog';
 // 搜索字段的中文映射
 const searchFieldLabels: Record<string, string> = {
   name: '合作伙伴名称',
-  type: '合作类型',
-  contact: '联系人',
-  phone: '联系电话',
-  email: '电子邮箱',
-  status: '状态',
+  contactPerson: '联系人',
 };
 
 interface PartnershipTableProps {
@@ -79,7 +75,7 @@ export function PartnershipTable({
       <DataTable
         columns={columns}
         data={data}
-        searchKeys={['name', 'type', 'contact', 'status']}
+        searchKeys={['name', 'contactPerson']}
         searchLabel="搜索合作伙伴"
         searchFieldLabels={searchFieldLabels}
       />

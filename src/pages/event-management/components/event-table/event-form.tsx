@@ -11,76 +11,88 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Event } from '@/types';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const formSchema = z.object({
   title: z.string().min(1, '请输入活动名称'),
-  type: z.string().min(1, '请选择活动类型'),
+  description: z.string().min(1, '请输入活动描述'),
   startDate: z.string().min(1, '请选择开始日期'),
   endDate: z.string().min(1, '请选择结束日期'),
   location: z.string().min(1, '请输入活动地点'),
-  description: z.string().min(1, '请输入活动描述'),
   organizer: z.string().min(1, '请输入活动组织方'),
+  registrationDeadline: z.string().min(1, '请选择报名截止日期').optional(),
   status: z.enum(['upcoming','ongoing', 'completed', 'cancelled']),
-  maxParticipants: z.number().min(1, '请输入最大参与人数'),
-  registrationDeadline: z.string().min(1, '请选择报名截止日期'),
+
+  maxParticipants: z.number().min(1, '请输入最大参与人数').optional(),
+  type: z.enum(['校园活动', '学术活动', '社区活动', '体育活动', '文化活动', '其他']).optional(),
+
 });
 
 type EventFormValues = z.infer<typeof formSchema>;
 
 interface EventFormProps {
-  initialData?: Partial<EventFormValues>;
+  event?: Event;
   onSubmit: (data: EventFormValues) => void;
   onCancel: () => void;
+  isLoading?: boolean;
 }
 
-export function EventForm({
-  initialData,
-  onSubmit,
-  onCancel,
-}: EventFormProps) {
-  const defaultValues: Partial<EventFormValues> = initialData ?
-   {
-    title: initialData.title,
-    description: initialData.description,
-    startDate: initialData.startDate,
-    endDate: initialData.endDate,
-    location: initialData.location,
-    organizer: initialData.organizer,
-    status: initialData.status,
-    maxParticipants: initialData.maxParticipants,
-    registrationDeadline: initialData.registrationDeadline,
-    type: initialData.type,
-  } :{
-    title: '',
-    description: '',
-    startDate: '',
-    endDate: '',
-    location: '',
-    organizer: '',
-    status: 'upcoming',
-    maxParticipants: 0,
-    registrationDeadline: '',
-    type: 'reunion',
-  };
-
-  const form = useForm<EventFormValues>({
+export const EventForm = ({ event, onSubmit, onCancel, isLoading }: EventFormProps) => {
+  const form = useForm <EventFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: {
+      title: event?.title,
+      description: event?.description,
+      startDate: event?.startDate,
+      endDate: event?.endDate,
+      location: event?.location,
+      organizer: event?.organizer,
+      registrationDeadline: event?.registrationDeadline,
+      type: event?.type,
+      status: event?.status,
+      maxParticipants: event?.maxParticipants,
+    },
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+        <FormField 
+          control={form.control}
+          name = 'title'
+          render={({ field })=>(
+            <FormItem>
+              <FormLabel>活动名称 *</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder='请输入活动名称'/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )} 
+        />
+
         <FormField
           control={form.control}
-          name="title"
-          render={({ field }) => (
+          name = 'type'
+          render={({ field })=>(
             <FormItem>
-              <FormLabel>活动名称</FormLabel>
+              <FormLabel>活动类型 *</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue>{field.value}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='campus'>校园活动</SelectItem>
+                    <SelectItem value='community'>社区活动</SelectItem>
+                    <SelectItem value='academic'>学术活动</SelectItem>
+                    <SelectItem value='sports'>体育活动</SelectItem>
+                    <SelectItem value='cultural'>文化活动</SelectItem>
+                    <SelectItem value='other'>其他</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -89,24 +101,13 @@ export function EventForm({
 
         <FormField
           control={form.control}
-          name="type"
-          render={({ field }) => (
+          name = 'startDate'
+          render={({ field })=>(
             <FormItem>
-              <FormLabel>活动类型</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="选择活动类型" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="reunion">校友聚会</SelectItem>
-                  <SelectItem value="lecture">讲座</SelectItem>
-                  <SelectItem value="seminar">研讨会</SelectItem>
-                  <SelectItem value="workshop">工作坊</SelectItem>
-                  <SelectItem value="other">其他</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormLabel>开始日期 *</FormLabel>
+              <FormControl>
+                <Input {...field} type='date' placeholder='请选择开始日期'/>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -114,55 +115,26 @@ export function EventForm({
 
         <FormField
           control={form.control}
-          name="organizer"
-          render={({ field }) => (
+          name ='endDate'
+          render={({ field })=>(
             <FormItem>
-              <FormLabel>活动组织方</FormLabel>
+              <FormLabel>结束日期 *</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} type='date' placeholder='请选择结束日期'/>
               </FormControl>
               <FormMessage />
             </FormItem> 
           )}
         />
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="startDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>开始日期</FormLabel>
-                <FormControl>
-                  <Input type="datetime-local" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="endDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>结束日期</FormLabel>
-                <FormControl>
-                  <Input type="datetime-local" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
 
         <FormField
           control={form.control}
-          name="location"
-          render={({ field }) => (
+          name = 'location'
+          render={({ field })=>(
             <FormItem>
-              <FormLabel>活动地点</FormLabel>
+              <FormLabel>活动地点 *</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder='请输入活动地点'/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -171,81 +143,97 @@ export function EventForm({
 
         <FormField
           control={form.control}
-          name="description"
-          render={({ field }) => (
+          name = 'description'
+          render={({ field })=>(
             <FormItem>
-              <FormLabel>活动描述</FormLabel>
+              <FormLabel>活动描述 *</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} placeholder='请输入活动描述'/>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="maxParticipants"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>最大参与人数</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} onChange={e => field.onChange(+e.target.value)} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="registrationDeadline"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>报名截止日期</FormLabel>
-                <FormControl>
-                  <Input type="datetime-local" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name = 'organizer'
+          render={({ field })=>(
+            <FormItem>
+              <FormLabel>活动组织方 *</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder='请输入活动组织方'/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
-          name="status"
-          render={({ field }) => (
+          name = 'status'
+          render={({ field })=>(
             <FormItem>
-              <FormLabel>活动状态</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+              <FormLabel>活动状态 *</FormLabel>
+              <FormControl>
+                <Select>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择活动状态" />
+                    <SelectValue>{field.value}</SelectValue>
                   </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="draft">草稿</SelectItem>
-                  <SelectItem value="published">已发布</SelectItem>
-                  <SelectItem value="registration">报名中</SelectItem>
-                  <SelectItem value="in_progress">进行中</SelectItem>
-                  <SelectItem value="completed">已结束</SelectItem>
-                  <SelectItem value="cancelled">已取消</SelectItem>
-                </SelectContent>
-              </Select>
+                  <SelectContent>
+                    <SelectItem value='upcoming'>未开始</SelectItem>
+                    <SelectItem value='ongoing'>进行中</SelectItem>
+                    <SelectItem value='completed'>已结束</SelectItem>
+                    <SelectItem value='cancelled'>已取消</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={onCancel}>
+        <FormField
+          control={form.control}
+          name = 'maxParticipants'
+          render={({ field })=>(
+            <FormItem>
+              <FormLabel>最大参与人数 *</FormLabel>
+              <FormControl>
+                <Input {...field} type='number' placeholder='请输入最大参与人数'/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name ='registrationDeadline'
+          render={({ field })=>(
+            <FormItem>
+              <FormLabel>报名截止日期 *</FormLabel>
+              <FormControl>
+                <Input {...field} type='date' placeholder='请选择报名截止日期'/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
             取消
           </Button>
-          <Button type="submit">提交</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? '提交中...' : event ? '更新' : '添加'}
+          </Button>
         </div>
       </form>
     </Form>
-  );
+  )
 }

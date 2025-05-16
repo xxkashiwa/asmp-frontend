@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog';
 import { Event } from '@/types';
 import { EventForm } from './event-form';
-
+import { useState } from 'react';
 
 interface EventDialogProps {
   isOpen: boolean;
@@ -26,17 +26,18 @@ export function EventDialog({
   description,
   event,
 }: EventDialogProps) {
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (data: Omit<Event, 'id'>) => {
+    setIsLoading(true);
     try {
       await onSubmit(data);
       onClose();
-
     } catch (error) {
       console.error('Error submitting form:', error);
-
-    } 
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -47,9 +48,10 @@ export function EventDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <EventForm
-          initialData={event}
+          event={event}
           onSubmit={handleSubmit}
           onCancel={onClose}
+          isLoading={isLoading}
         />
       </DialogContent>
     </Dialog>

@@ -26,11 +26,7 @@ interface DonationTableProps {
 // 搜索字段的中文映射
 const searchFieldLabels: Record<string, string> = {
   donorName: '捐赠人',
-  amount: '金额',
   projectName: '项目名称',
-  donationDate: '捐赠日期',
-  status: '状态',
-  paymentMethod: '支付方式',
 };
 
 export function DonationTable({
@@ -83,7 +79,7 @@ export function DonationTable({
       <DataTable
         columns={columns}
         data={data}
-        searchKeys={['donorName', 'projectName', 'status', 'paymentMethod']}
+        searchKeys={['donorName', 'projectName',  ]}
         searchLabel="搜索捐赠记录"
         searchFieldLabels={searchFieldLabels}
       />
@@ -94,9 +90,8 @@ export function DonationTable({
         onClose={() => setOpenAddDialog(false)}
         onSubmit={onAddDonation}
         title="添加捐赠记录"
-        description="填写捐赠记录信息，带 * 的字段为必填项。"
+        description="添加捐赠记录，带 * 的字段为必填项。"
       />
-
       {/* 编辑捐赠记录对话框 */}
       <DonationDialog
         isOpen={!!donationToEdit}

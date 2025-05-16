@@ -182,7 +182,7 @@ export const mockOrganizationData: Organization[] = [
     contactPhone: '029-12345678',
     contact: '张秘书',
     location: '西安市雁塔区',
-    status: 'active',
+    status: 'inactive',
   },
   {
     id: 14,
@@ -224,7 +224,7 @@ export const mockOrganizationData: Organization[] = [
     contactPhone: '13612345679',
     contact: '林水',
     location: '线上',
-    status: 'active',
+    status: 'inactive',
   },
   {
     id: 17,
@@ -266,7 +266,7 @@ export const mockOrganizationData: Organization[] = [
     contactPhone: '023-12345678',
     contact: '陈秘书',
     location: '重庆市渝中区',
-    status: 'active',
+    status: 'inactive',
   },
   {
     id: 20,
