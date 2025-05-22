@@ -77,6 +77,7 @@ export function DonationTable({
       </div>
 
       <DataTable
+        tableId="donation-table"
         columns={columns}
         data={data}
         searchKeys={['donorName', 'projectName',  ]}

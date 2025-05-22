@@ -74,6 +74,7 @@ export function OrganizationTable({
       </div>
 
       <DataTable
+        tableId="organization-table"
         columns={columns}
         data={data}
         searchKeys={['name', 'location',  'leader']}

@@ -7,11 +7,23 @@ import {
   TableHeader,
   TableRow,
 } from '../table';
-import { useDataTable } from './data-table-context';
+import useDataTableStore from '@/stores/data-table-store';
 
-export function DataTableContent() {
-  const { table } = useDataTable();
+interface DataTableContentProps {
+  tableId: string;
+}
 
+export function DataTableContent({
+  tableId,
+}: DataTableContentProps) {
+  const { tables, getTableState } = useDataTableStore();
+  getTableState(tableId);
+  const tableState = tables[tableId];
+  if (!tableState)  return null;
+  const { table } = tableState;
+  if (!table) {
+    return null;
+  }
   return (
     <div className="rounded-md border">
       <Table>

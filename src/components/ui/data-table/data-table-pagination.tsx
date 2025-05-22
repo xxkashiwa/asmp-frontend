@@ -6,11 +6,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../select';
-import { useDataTable } from './data-table-context';
+import useDataTableStore from '@/stores/data-table-store';
 
-export function DataTablePagination() {
-  const { table, pageSize, setPageSize, pageIndex, setPageIndex } =
-    useDataTable();
+interface DataTablePaginationProps {
+  tableId: string;
+}
+
+export function DataTablePagination({
+  tableId
+}: DataTablePaginationProps) {
+  const { tables, setPageSize, setPageIndex, getTableState  } = useDataTableStore();
+  getTableState(tableId);
+  const tableState = tables[tableId];
+  if (!tableState) return null;
+  const { table, pageSize, pageIndex } = tableState;
+  if (!table) return null;
+
+  const pageCount = table.getPageCount?.() ?? 0;
+  const canPreviousPage = table.getCanPreviousPage?.() ?? false;
+  const canNextPage = table.getCanNextPage?.() ?? false;
 
   return (
     <div className="flex items-center justify-between space-x-2 py-4">
@@ -19,8 +33,8 @@ export function DataTablePagination() {
         <Select
           value={pageSize.toString()}
           onValueChange={value => {
-            setPageSize(Number(value));
-            setPageIndex(0); // Reset to first page when changing page size
+            setPageSize(tableId, Number(value));
+            setPageIndex(tableId, 0); // Reset to first page when changing page size
           }}
         >
           <SelectTrigger className="w-[70px]">
@@ -38,17 +52,17 @@ export function DataTablePagination() {
       </div>
       <div className="flex items-center space-x-2">
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          第 {table.getState().pagination.pageIndex + 1} 页，共{' '}
-          {table.getPageCount()} 页
+          第 {pageIndex + 1} 页，共{' '}
+          {pageCount} 页
         </div>
         <Button
           variant="outline"
           size="sm"
           onClick={() => {
-            table.previousPage();
-            setPageIndex(pageIndex - 1);
+            table.previousPage?.();
+            setPageIndex(tableId, pageIndex - 1);
           }}
-          disabled={!table.getCanPreviousPage()}
+          disabled={!canPreviousPage}
         >
           上一页
         </Button>
@@ -56,10 +70,10 @@ export function DataTablePagination() {
           variant="outline"
           size="sm"
           onClick={() => {
-            table.nextPage();
-            setPageIndex(pageIndex + 1);
+            table.nextPage?.();
+            setPageIndex(tableId, pageIndex + 1);
           }}
-          disabled={!table.getCanNextPage()}
+          disabled={!canNextPage}
         >
           下一页
         </Button>

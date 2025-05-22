@@ -71,6 +71,7 @@ export const NewsTable = ({
             </div>
 
             <DataTable 
+                tableId = "news-table"
                 columns = {colomns}
                 data = {data}
                 searchKeys = {['title', 'author', 'category']}

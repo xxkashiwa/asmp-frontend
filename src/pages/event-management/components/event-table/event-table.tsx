@@ -74,6 +74,7 @@ export function EventTable({
       </div>
 
       <DataTable
+        tableId="event-table"
         columns={columns}
         data={data}
         searchKeys={['title',  'location',  'organizer']}

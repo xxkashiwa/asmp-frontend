@@ -1,4 +1,4 @@
-   import { Input } from '../input';
+import { Input } from '../input';
 import {
   Select,
   SelectContent,
@@ -6,22 +6,27 @@ import {
   SelectTrigger,
   SelectValue,  
 } from '../select';
-import { useDataTable } from './data-table-context';
+import useDataTableStore from '@/stores/data-table-store';
 
 interface DataTableSearchProps {
+  tableId: string;
   searchKeys?: string[];
   searchLabel?: string;
   searchFieldLabels?: Record<string, string>;
 }
 
 export function DataTableSearch({
+  tableId,
   searchKeys,
   searchLabel = '搜索...',
   searchFieldLabels,
 }: DataTableSearchProps) {
-  const { table, currentSearchKey, setCurrentSearchKey } = useDataTable();
-
-  // 获取搜索字段的显示名称
+  const { tables, setCurrentSearchKey, getTableState  } = useDataTableStore();
+  getTableState(tableId);
+  if(!tables || !tables[tableId]) return null;
+  const tableState = tables[tableId];
+  const { table, currentSearchKey } = tableState;
+  if(!table) return null;
   const getSearchFieldLabel = (key: string): string => {
     if (searchFieldLabels && key in searchFieldLabels) {
       return searchFieldLabels[key];
@@ -58,7 +63,7 @@ export function DataTableSearch({
             if (currentSearchKey) {
               table.getColumn(currentSearchKey)?.setFilterValue('');
             }
-            setCurrentSearchKey(value);
+            setCurrentSearchKey(tableId,value);
           }}
         >
           <SelectTrigger className="w-[180px]">

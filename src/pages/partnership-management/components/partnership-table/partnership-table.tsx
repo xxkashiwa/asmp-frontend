@@ -73,6 +73,7 @@ export function PartnershipTable({
       </div>
 
       <DataTable
+        tableId="partnership-table"
         columns={columns}
         data={data}
         searchKeys={['name', 'contactPerson']}
