@@ -1,32 +1,32 @@
 import request from '@/lib/request';
-
+import { News } from '@/types';
 const endPoint = '/campus-news';
 
-export const getDonationList = async (params: any) => {
+export const getCampusNewsList = async (params: Omit<News, 'id'>) => {
   return request({
     url: endPoint,
     method: 'GET',
-    params,
+    data: params,
   });
 };
 
-export const addDonation = async (data: any) => {
+export const addCampusNews = async (data: Omit<News, 'id'>) => {
   return request({
     url: endPoint,
     method: 'POST',
-    data,
+    data: data,
   });
 };
 
-export const updateDonation = async (id: number, data: any) => {
+export const updateCampusNews = async (id: number, data: Omit<News, 'id'>) => {
   return request({
     url: `${endPoint}/${id}`,
     method: 'PUT',
-    data,
+    data: data,
   });
 };
 
-export const deleteDonation = async (id: number) => {
+export const deleteCampusNews = async (id: number) => {
   return request({
     url: `${endPoint}/${id}`,
     method: 'DELETE',

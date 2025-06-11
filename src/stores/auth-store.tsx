@@ -13,7 +13,6 @@ const useAuthStore = create<AuthStoreState>()(
     (set) => ({
       accessToken: null,
       isAuthenticated: false,
-      isAdmin: false,
       setAccessToken: token => {
         set({ accessToken: token });
       },

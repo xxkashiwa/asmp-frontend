@@ -1,28 +1,29 @@
 import request from '@/lib/request';
+import { Donation } from '@/types';
 
 const endPoint = '/donation';
 
-export const getDonationList = async (params: any) => {
+export const getDonationList = async (params: Omit<Donation, 'id'>) => {
   return request({
     url: endPoint,
     method: 'GET',
-    params,
+    data: params,
   });
 };
 
-export const addDonation = async (data: any) => {
+export const addDonation = async (data: Omit<Donation, 'id'>) => {
   return request({
     url: endPoint,
     method: 'POST',
-    data,
+    data: data,
   });
 };
 
-export const updateDonation = async (id: number, data: any) => {
+export const updateDonation = async (id: number, data: Omit<Donation, 'id'>) => {
   return request({
     url: `${endPoint}/${id}`,
     method: 'PUT',
-    data,
+    data: data,
   });
 };
 
