@@ -14,10 +14,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-
+import { SimpleCaptcha, validateSimpleCaptcha } from '@/components/ui/simple-captcha';
+import { useState, useRef } from 'react';
 const formSchema = z.object({
   nameOrEmail: z.string().min(1, { message: '用户名或邮箱不能为空' }),
   password: z.string().min(6, { message: '密码至少6个字符' }),
+  captcha: z.string().min(1, {message: '验证码不能为空'}),
 });
 type FormData = z.infer<typeof formSchema>;
 
@@ -27,18 +29,30 @@ const Login: React.FC = () => {
     defaultValues: {
       nameOrEmail: '',
       password: '',
+      captcha: '',
     },
   });
 
 //记录登录状态
   const { setIsAuthenticated, setAccessToken } = useAuthStore();
   const navigate = useNavigate();
+  const captchaRef = useRef<HTMLInputElement>(null);
+  const [captchaText, setCaptchaText] = useState<string>('');
   const onSubmit = (data: FormData) => {
+    try{    
+      if(!validateSimpleCaptcha(data.captcha, captchaText)){
+        throw new Error('验证码错误');
+      }
     setIsAuthenticated(true);
     setAccessToken('0d000721');
     console.log(data);
     navigate('/');
+  } catch(error) {
+    alert(error instanceof Error ? error.message : '验证失败');
+    userForm.setValue('captcha', '');
+  }
   };
+
 
   return (
 //登录界面
@@ -85,6 +99,37 @@ const Login: React.FC = () => {
                 </FormItem>
               )}
             />
+            
+            <FormItem>
+              <FormLabel>验证码</FormLabel>
+              <div className="flex items-center gap-2">
+                <div className="w-[70%]">
+                  <FormField
+                    control={userForm.control}
+                    name="captcha"
+                    render={({ field }) => (
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="text"
+                          placeholder="请输入验证码"
+                          ref={captchaRef}
+                          className="w-full"
+                        />
+                      </FormControl>
+                    )}
+                  />
+                </div>
+                <div className="w-[30%] flex items-center justify-center h-9">
+                  <SimpleCaptcha 
+                    onGenerate={setCaptchaText} 
+                    height={36} 
+                    width={120}
+                  />
+                </div>
+              </div>
+              <FormMessage>{userForm.formState.errors.captcha?.message}</FormMessage>
+            </FormItem>
 
             <Button type="submit" className="w-full border-0 bg-blue-600">
               登录
