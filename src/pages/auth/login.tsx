@@ -8,18 +8,21 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  SimpleCaptcha,
+  validateSimpleCaptcha,
+} from '@/components/ui/simple-captcha';
 import useAuthStore from '@/stores/auth-store';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { z } from 'zod';
-import { SimpleCaptcha, validateSimpleCaptcha } from '@/components/ui/simple-captcha';
-import { useState, useRef } from 'react';
 const formSchema = z.object({
   nameOrEmail: z.string().min(1, { message: '用户名或邮箱不能为空' }),
   password: z.string().min(6, { message: '密码至少6个字符' }),
-  captcha: z.string().min(1, {message: '验证码不能为空'}),
+  captcha: z.string().min(1, { message: '验证码不能为空' }),
 });
 type FormData = z.infer<typeof formSchema>;
 
@@ -33,32 +36,35 @@ const Login: React.FC = () => {
     },
   });
 
-//记录登录状态
+  //记录登录状态
   const { setIsAuthenticated, setAccessToken } = useAuthStore();
   const navigate = useNavigate();
   const captchaRef = useRef<HTMLInputElement>(null);
   const [captchaText, setCaptchaText] = useState<string>('');
-  const onSubmit = (data: FormData) => {
-    try{    
-      if(!validateSimpleCaptcha(data.captcha, captchaText)){
+  const onSubmit = async (data: FormData) => {
+    try {
+      if (!validateSimpleCaptcha(data.captcha, captchaText)) {
         throw new Error('验证码错误');
       }
-    setIsAuthenticated(true);
-    setAccessToken('0d000721');
-    console.log(data);
-    navigate('/');
-  } catch(error) {
-    alert(error instanceof Error ? error.message : '验证失败');
-    userForm.setValue('captcha', '');
-  }
+      // const resp = await login(data.nameOrEmail, data.password);
+      // if (resp.status !== 200) {
+      //   throw new Error('登录失败');
+      // }
+      setIsAuthenticated(true);
+      setAccessToken('0d000721');
+      console.log(data);
+      navigate('/');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '验证失败');
+      userForm.setValue('captcha', '');
+    }
   };
 
-
   return (
-//登录界面
+    //登录界面
     <div className="flex min-h-screen w-full items-center justify-center">
       <div className="mx-auto w-full max-w-md space-y-6 rounded-lg p-8 shadow-md">
-        <h1 className="mb-6 text-center text-2xl font-bold">登录</h1>-
+        <h1 className="mb-6 text-center text-2xl font-bold">登录</h1>
         <Form {...userForm}>
           <form
             onSubmit={userForm.handleSubmit(onSubmit)}
@@ -99,7 +105,7 @@ const Login: React.FC = () => {
                 </FormItem>
               )}
             />
-            
+
             <FormItem>
               <FormLabel>验证码</FormLabel>
               <div className="flex items-center gap-2">
@@ -120,15 +126,17 @@ const Login: React.FC = () => {
                     )}
                   />
                 </div>
-                <div className="w-[30%] flex items-center justify-center h-9">
-                  <SimpleCaptcha 
-                    onGenerate={setCaptchaText} 
-                    height={36} 
+                <div className="flex h-9 w-[30%] items-center justify-center">
+                  <SimpleCaptcha
+                    onGenerate={setCaptchaText}
+                    height={36}
                     width={120}
                   />
                 </div>
               </div>
-              <FormMessage>{userForm.formState.errors.captcha?.message}</FormMessage>
+              <FormMessage>
+                {userForm.formState.errors.captcha?.message}
+              </FormMessage>
             </FormItem>
 
             <Button type="submit" className="w-full border-0 bg-blue-600">

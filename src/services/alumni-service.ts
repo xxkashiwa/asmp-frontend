@@ -1,32 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import request from '@/lib/request';
-import { Alumni } from '@/types';
+import { Alumni, convertToAlumni } from '@/models/alumni';
 const endPoint = '/alumni';
 
-export const getAlumniList = async (params: Omit<Alumni, 'id'>) => {
-  return request({
-    url: endPoint,
+const getAllAlumni = async () => {
+  const response = await request({
+    url: `${endPoint}`,
     method: 'GET',
-    params,
   });
+  const datas = response.data.map((data: any) => convertToAlumni(data));
+  return datas as Alumni[];
 };
-export const updateAlumni = async (id: number, params: Omit<Alumni, 'id'>) => {
-  return request({
+
+const getAlumniById = async (id: string) => {
+  const response = await request({
     url: `${endPoint}/${id}`,
-    method: 'POST',
-    data: params,
-  })
-}
-export const addAlumni = async (params: Omit<Alumni, 'id'>) => {
-  return request({
-    url:  `${endPoint}`,
-    method: 'POST',
-    data: params,
-  })
-}
-export const deleteAlumni = async (id: number) => {
-  return request({
-    url: `${endPoint}/${id}`,
-    method: 'DELETE',
+    method: 'GET',
   });
-}
+  return convertToAlumni(response.data) as Alumni;
+};
+
+export { getAllAlumni, getAlumniById };

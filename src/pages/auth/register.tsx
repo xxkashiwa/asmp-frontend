@@ -8,23 +8,18 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { register } from '@/services/auth-service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { z } from 'zod';
-const passwordSchema = z
-  .string()
-  .min(8, { message: '密码至少8位' })
-  .regex(/[a-z]/, { message: '至少包含1个小写字母' })
-  .regex(/[A-Z]/, { message: '至少包含1个大写字母' })
-  .regex(/[0-9]/, { message: '至少包含1个数字' });
-
+const passwordSchema = z.string().min(8, { message: '密码至少8位' });
 // 注册表单验证
 const formSchema = z
   .object({
-    name: z.string().min(1, { message: '用户名不能为空' }),
-    email: z.string().min(1, { message: '邮箱不能为空' }),
+    email: z.string().email({ message: '请输入有效的邮箱地址' }),
     password: passwordSchema,
     confirmPassword: z.string(),
   })
@@ -38,18 +33,22 @@ const Register: React.FC = () => {
   const userForm = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
       email: '',
       password: '',
       confirmPassword: '',
     },
   });
   const navigate = useNavigate();
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    navigate('/');
+  const onSubmit = async (data: FormData) => {
+    try {
+      await register(data.email, data.password);
+      navigate('/login');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '注册失败，请重试');
+      return;
+    }
   };
-// 注册表单
+  // 注册表单
   return (
     <div className="flex min-h-screen w-full items-center justify-center">
       <div className="w-full max-w-md space-y-6 rounded-lg p-8 shadow-md">
@@ -59,25 +58,6 @@ const Register: React.FC = () => {
             onSubmit={userForm.handleSubmit(onSubmit)}
             className="space-y-4"
           >
-            <FormField
-              name="name"
-              control={userForm.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>用户名</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="text"
-                      placeholder="请输入用户名"
-                      className="w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               name="email"
               control={userForm.control}
