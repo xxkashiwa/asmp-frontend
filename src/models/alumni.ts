@@ -12,13 +12,13 @@ interface Alumni {
 export const convertToAlumni = (data: any): Alumni => {
   return {
     id: data.id,
-    studentId: data.studentId,
+    studentId: data.studentId ?? '',
     realName: data.realName,
     gender: data.gender,
     dateOfBirth: data.dateOfBirth,
-    address: data.address,
-    companyName: data.companyName,
-    currentJob: data.currentJob,
+    address: data.address ?? '',
+    companyName: data.companyName ?? '',
+    currentJob: data.currentJob ?? '',
   };
 };
 
