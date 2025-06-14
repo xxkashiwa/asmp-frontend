@@ -1,8 +1,8 @@
 interface Alumni {
-  id: string;
+  addedAt: string,
   studentId: string;
   realName: string;
-  gender: 'MALE' | 'FEMALE' | 'HACHIMI';
+  gender: 'MALE' | 'FEMALE' ;
   dateOfBirth: string;
   address: string;
   companyName: string;
@@ -11,7 +11,7 @@ interface Alumni {
 
 export const convertToAlumni = (data: any): Alumni => {
   return {
-    id: data.id,
+    addedAt: data.addedAt,
     studentId: data.studentId ?? '',
     realName: data.realName,
     gender: data.gender,

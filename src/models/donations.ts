@@ -1,0 +1,68 @@
+export interface Donations {
+    id: string,
+    donor: {
+        addedAt: string,
+    },
+    project: {
+        id: string,
+        name: string,
+        description: string,
+        targetAmount: number,
+        currentAmount: number,
+        startDate: string,
+        endDate: string,
+        status: 'ACTIVE' | 'COMPLETED' | 'SUSPENDED' | 'CLOSED',
+        category: string,
+        imageUrl: string,
+        organizer: {
+            addedAt: string
+        },
+        createdAt: string,
+        updatedAt: string,
+        progress: number,
+        targetReached: boolean,
+    },
+    amount: number,
+    paymentMethod: 'ALIPAY' | 'WECHAT' | 'BANK_TRANSFER' | 'CREDIT_CARD' | 'CASH' ,
+    donateTime: string,
+    remark: string,
+    status: 'PENDING' | 'CONFIRMED' | 'CANCELED' | 'REFUNDED' | 'COMPLETED',
+    transactionId: string,
+    anonymous: boolean,
+    createdAt: string,
+    updatedAt: string,
+}
+export  const convertToDonations = (data: any): Donations => {
+    return {
+        id: data.id??'',
+        donor: {
+            addedAt: data.donor.addedAt,
+        },
+        project: {
+            id: data.project.id??'',
+            name: data.project.name,
+            description: data.project.description??'',
+            targetAmount: data.project.targetAmount,
+            currentAmount: data.project.currentAmount??0,
+            startDate: data.project.startDate,
+            endDate: data.project.endDate??'',
+            status: data.project.status??'ACTIVE',
+            category: data.project.category??'',
+            imageUrl: data.project.imageUrl??'',
+            organizer: data.project.organizer??{addedAt: ''},
+            createdAt: data.project.createdAt??'',
+            updatedAt: data.project.updatedAt??'',
+            progress: data.project.progress??'',
+            targetReached: data.project.targetReached??true,
+        },
+        amount: data.amount,
+        paymentMethod: data.paymentMethod??'ALIPAY',
+        donateTime: data.donateTime,
+        remark: data.remark??'',
+        status: data.status??'PENDING',
+        transactionId: data.transactionId??'',
+        anonymous: data.anonymous??false,
+        createdAt: data.createdAt??'',
+        updatedAt: data.updatedAt??'',
+    }
+}
