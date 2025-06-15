@@ -1,13 +1,13 @@
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-  } from '@/components/ui/alert-dialog';
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { Notice } from '@/models/notice';
@@ -17,105 +17,110 @@ import { getNoticeColumns } from './notice-columns';
 import { NoticeDialog } from './notice-dialog';
 
 interface NoticeTableProps {
-    data: Notice[];
-    onAddNotice: (data: Notice) => Promise<void>;
-    onEditNotice: (id: string, data: Notice) => Promise<void>;
-    onDeleteNotice: (id: string) => Promise<void>;
+  data: Notice[];
+  onAddNotice: (data: Notice) => Promise<void>;
+  onEditNotice: (id: string, data: Notice) => Promise<void>;
+  onDeleteNotice: (id: string) => Promise<void>;
 }
-const searchFieldLabels = {
-    title: '标题',
-    content: '内容',
-    type: '类型',
+
+// 搜索字段的中文映射
+const searchFieldLabels: Record<string, string> = {
+  title: '标题',
+  content: '内容',
+  type: '类型',
 };
 
-export  const NoticeTable = ({
-    data,
-    onAddNotice,
-    onEditNotice,
-    onDeleteNotice,
-}: NoticeTableProps) => {
-    const [openAddDialog, setOpenAddDialog] = useState(false);
-    const [noticeToEdit, setNoticeToEdit] = useState<Notice | undefined>(undefined);
-    const [noticeToDelete, setNoticeToDelete] = useState<Notice | undefined>(undefined);
+export default function NoticeTable({
+  data,
+  onAddNotice,
+  onEditNotice,
+  onDeleteNotice,
+}: NoticeTableProps) {
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [noticeToEdit, setNoticeToEdit] = useState<Notice | undefined>(
+    undefined
+  );
+  const [noticeToDelete, setNoticeToDelete] = useState<Notice | undefined>(
+    undefined
+  );
 
-    const handleEdit = (notice : Notice) => {
-        setNoticeToEdit(notice);
+  const handleEdit = (notice: Notice) => {
+    setNoticeToEdit(notice);
+  };
+
+  const handleDelete = (notice: Notice) => {
+    setNoticeToDelete(notice);
+  };
+
+  const handleEditSubmit = async (formData: Notice) => {
+    if (noticeToEdit) {
+      await onEditNotice(noticeToEdit.id, formData);
+      setNoticeToEdit(undefined);
     }
+  };
 
-    const handleDelete = (notice : Notice) => {
-        setNoticeToDelete(notice);
+  const handleDeleteConfirm = async () => {
+    if (noticeToDelete) {
+      await onDeleteNotice(noticeToDelete.id);
+      setNoticeToDelete(undefined);
     }
-    const handleEditSubmit = async (formData: Notice) => {
-        if (noticeToEdit) {
-            await onEditNotice(noticeToEdit.id, formData);
-            setNoticeToEdit(undefined);
-        }
-    };
+  };
 
-    const handleDeleteConfirm = async () => {
-        if (noticeToDelete) {
-            await onDeleteNotice(noticeToDelete.id);
-            setNoticeToDelete(undefined);
-        }
-    };
+  const columns = getNoticeColumns(handleEdit, handleDelete);
 
-    const columns = getNoticeColumns(handleEdit, handleDelete);
-
-    return(
-        <div className = "space-y-4">
-            <div className="flex justify-end">
-                <Button onClick={() => setOpenAddDialog(true)}>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    添加通知
-                </Button>
-            </div>
-
-            <DataTable 
-                tableId = "notice-table"
-                columns = {columns}
-                data = {data}
-                searchKeys = {['title', 'content', 'type']}
-                searchLabel = "搜索通知"
-                searchFieldLabels = {searchFieldLabels}
-            />
-            
-            <NoticeDialog 
-                isOpen = {openAddDialog}
-                onClose = {() => setOpenAddDialog(false)}
-                onSubmit = {onAddNotice}
-                title = "添加通知"
-                description = "填写通知信息，带 * 的字段为必填项。"
-            />
-            <NoticeDialog
-                isOpen = {!!noticeToEdit}
-                onClose = {() => setNoticeToEdit(undefined)}
-                onSubmit = {handleEditSubmit}
-                notice = {noticeToEdit}
-                title = "编辑通知"
-                description = "填写通知信息，带 * 的字段为必填项。"
-            />
-
-            <AlertDialog
-                open = {!!noticeToDelete}
-                onOpenChange={open => !open && setNoticeToDelete(undefined)}    
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>确认删除</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            您确定要删除名为 {noticeToDelete?.title} 的通知吗？此操作无法撤销。
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>取消</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDeleteConfirm}>
-                        删除
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-        </div>
-    )
-};
-
-export default NoticeTable;
+  return (
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-medium">通知管理</h2>
+        <Button
+          onClick={() => setOpenAddDialog(true)}
+          className="flex items-center gap-1"
+        >
+          <PlusCircle className="h-4 w-4" />
+          <span>添加通知</span>
+        </Button>
+      </div>{' '}
+      <DataTable<Notice, keyof Notice>
+        tableId="notice-table"
+        columns={columns}
+        data={data}
+        searchKey="title"
+        searchFieldLabels={searchFieldLabels}
+      />
+      <NoticeDialog
+        open={openAddDialog}
+        setOpen={setOpenAddDialog}
+        onSubmit={onAddNotice}
+        mode="add"
+      />
+      {noticeToEdit && (
+        <NoticeDialog
+          open={!!noticeToEdit}
+          setOpen={() => setNoticeToEdit(undefined)}
+          onSubmit={handleEditSubmit}
+          initialData={noticeToEdit}
+          mode="edit"
+        />
+      )}
+      <AlertDialog
+        open={!!noticeToDelete}
+        onOpenChange={() => setNoticeToDelete(undefined)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>确认删除</AlertDialogTitle>
+            <AlertDialogDescription>
+              你确定要删除这条通知吗？这个操作不能撤销。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>
+              删除
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}

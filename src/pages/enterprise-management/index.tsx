@@ -1,21 +1,31 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Enterprise } from '@/models/enterprise';
-import  useEnterpriseStore  from '@/stores/enterprise-store';
+import useEnterpriseStore from '@/stores/enterprise-store';
 import React, { useEffect } from 'react';
 import { toast } from 'sonner';
 import { EnterpriseTable } from './components/enterprise-table/enterprise-table';
+
 const EnterpriseManagement: React.FC = () => {
-  const { enterpriseList, fetchEnterpriseList } = useEnterpriseStore();
+  const {
+    enterpriseList,
+    fetchEnterpriseList,
+    addEnterprise,
+    updateEnterprise,
+    deleteEnterprise,
+  } = useEnterpriseStore();
 
   useEffect(() => {
+    if (enterpriseList.length > 0) {
+      return; // 如果企业数据已经存在，则不再请求
+    }
     fetchEnterpriseList().catch(error => {
-      console.error('Failed to fetch erterprise data', error);
+      console.error('Failed to fetch enterprise data', error);
       toast.error('获取合作伙伴数据失败');
     });
-  }, [fetchEnterpriseList]);
+  }, [fetchEnterpriseList, enterpriseList.length]);
 
   const handleAddEnterprise = async (data: Enterprise): Promise<void> => {
     try {
+      addEnterprise(data);
       toast.success('添加企业成功');
     } catch (error) {
       console.error('Failed to add enterprise', error);
@@ -28,15 +38,17 @@ const EnterpriseManagement: React.FC = () => {
     data: Enterprise
   ): Promise<void> => {
     try {
+      updateEnterprise({ ...data, id });
       toast.success('更新企业信息成功');
     } catch (error) {
       console.error('Failed to update enterprise', error);
       toast.error('更新企业信息失败');
     }
   };
-  
+
   const handleDeleteEnterprise = async (id: string): Promise<void> => {
     try {
+      deleteEnterprise(id);
       toast.success('删除企业成功');
     } catch (error) {
       console.error('Failed to delete enterprise', error);
@@ -65,4 +77,6 @@ const EnterpriseManagement: React.FC = () => {
       </div>
     </div>
   );
-}
+};
+
+export default EnterpriseManagement;

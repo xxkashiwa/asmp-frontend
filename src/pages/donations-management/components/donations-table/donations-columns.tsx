@@ -1,110 +1,74 @@
-
 import { Donations } from '@/models/donations';
 import { ColumnDef } from '@tanstack/react-table';
-import { DonationActions } from './donations-actions';
+import { DonationsActions } from './donations-actions';
 
-export function getDonationColumns(
-  onEdit: (donation: Donations) => void,
-  onDelete: (donation: Donations) => void
-): ColumnDef<Donations>[] {
-  return [
-    {
-      accessorKey: 'name',
-      header: '项目名称',
-    },
-    {
-      accessorKey: 'description',
-      header: '描述',
-      cell: ({ row }) => {
-        const description = row.getValue('description') as string;
-        return description.length > 50 ? `${description.slice(0, 50)}...` : description;
-      },
-    },
-    {
-      accessorKey: 'targetAmount',
-      header: '目标金额',
-      cell: ({ row }) => {
-        const amount = parseFloat(row.getValue('targetAmount'));
-        return new Intl.NumberFormat('zh-CN', {
-          style: 'currency',
-          currency: 'CNY',
-        }).format(amount);
-      },
-    },
-    {
-      accessorKey: 'currentAmount',
-      header: '当前金额',
-      cell: ({ row }) => {
-        const amount = parseFloat(row.getValue('currentAmount'));
-        return new Intl.NumberFormat('zh-CN', {
-          style: 'currency',
-          currency: 'CNY',
-        }).format(amount);
-      },
-    },
-    {
-      accessorKey: 'status',
-      header: '状态',
-      cell: ({ row }) => {
-        const status = row.getValue('status') as string;
-        let className = '';
-        let statusText = '';
+// 状态的中文映射
+const statusLabels: Record<string, string> = {
+  PENDING: '待处理',
+  CONFIRMED: '已确认',
+  CANCELED: '已取消',
+  REFUNDED: '已退款',
+  COMPLETED: '已完成',
+};
 
-        switch (status) {
-          case 'PENDING':
-            className = 'bg-blue-100 text-blue-800';
-            statusText = '待处理';
-            break;
-          case 'CONFIRMED':
-            className = 'bg-amber-100 text-amber-800';
-            statusText = '已确认';
-            break;
-          case 'COMPLETED':
-            className = 'bg-green-100 text-green-800';
-            statusText = '已完成';
-            break;
-          case 'CANCELED':
-            className = 'bg-red-100 text-red-800';
-            statusText = '已取消';
-            break;
-          case 'REFUNDED':
-            className = 'bg-gray-100 text-gray-800';
-            statusText = '已退款';
-            break;
-          default:
-            className = 'bg-gray-100 text-gray-800';
-            statusText = status;
-        }
-
-        return (
-          <span
-            className={`inline-block rounded-full px-2 py-1 text-xs font-semibold ${className}`}
-          >
-            {statusText}
-          </span>
-        );
-      },
+export const getDonationsColumns = (
+  onEditDonation: (donation: Donations) => void,
+  onDeleteDonation: (donation: Donations) => void
+): ColumnDef<Donations>[] => [
+  {
+    accessorKey: 'name',
+    header: '名字',
+  },
+  {
+    accessorKey: 'description',
+    header: '描述',
+    cell: ({ row }) => {
+      const content = row.original.description;
+      // 显示内容的前30个字符，如果内容长度超过30个字符则显示...
+      return content.length > 30 ? `${content.substring(0, 30)}...` : content;
     },
-    {
-      accessorKey: 'targetReached',
-      header: '目标达成',
-      cell: ({ row }) => {
-        const targetReached = row.getValue('targetReached') as boolean;
-        return targetReached ? '是' : '否';
-      },
+  },
+  {
+    id: 'amountInfo',
+    header: '目标金额/现金额',
+    cell: ({ row }) => {
+      const current = row.original.targetAmount.toLocaleString('zh-CN', {
+        style: 'currency',
+        currency: 'CNY',
+      });
+      const target = row.original.currentAmount.toLocaleString('zh-CN', {
+        style: 'currency',
+        currency: 'CNY',
+      });
+      return `${current} / ${target}`;
     },
-    {
-      id: 'actions',
-      cell: ({ row }) => {
-        const donation = row.original;
-        return (
-          <DonationActions
-            donation={donation}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        );
-      },
+  },
+  {
+    id: 'dateInfo',
+    header: '开始时间/结束时间',
+    cell: ({ row }) => {
+      const startDate = new Date(row.original.startDate).toLocaleDateString(
+        'zh-CN'
+      );
+      const endDate = row.original.endDate
+        ? new Date(row.original.endDate).toLocaleDateString('zh-CN')
+        : '无结束日期';
+      return `${startDate} / ${endDate}`;
     },
-  ];
-}
+  },
+  {
+    accessorKey: 'status',
+    header: '状态',
+    cell: ({ row }) => statusLabels[row.original.status] || row.original.status,
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => (
+      <DonationsActions
+        row={row.original}
+        onEdit={onEditDonation}
+        onDelete={onDeleteDonation}
+      />
+    ),
+  },
+];

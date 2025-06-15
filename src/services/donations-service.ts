@@ -1,7 +1,7 @@
 import request from '@/lib/request';
 import { Donations, convertToDonations } from '@/models/donations';
 
-const endPoint = '/donations';
+const endPoint = '/donation-project';
 
 export const getAllDonations = async () => {
   const response = await request({
@@ -10,7 +10,7 @@ export const getAllDonations = async () => {
   });
   const datas = response.data.map((item: any) => convertToDonations(item));
   return datas as Donations[];
-}
+};
 
 export const getDonationsById = async (id: string) => {
   const response = await request({
@@ -19,4 +19,4 @@ export const getDonationsById = async (id: string) => {
   });
   const data = convertToDonations(response.data);
   return data as Donations;
-}
+};

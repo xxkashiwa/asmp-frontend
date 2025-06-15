@@ -11,13 +11,17 @@ import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
 import { Activity } from '@/models/activity';
 
-interface EventActionsProps {
+interface ActivityActionsProps {
   row: Activity;
-  onEdit: (event: Activity) => void;
-  onDelete: (event: Activity) => void;
+  onEdit: (activity: Activity) => void;
+  onDelete: (activity: Activity) => void;
 }
 
-export function EventActions({ row, onEdit, onDelete }: EventActionsProps) {
+export function ActivityActions({
+  row,
+  onEdit,
+  onDelete,
+}: ActivityActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

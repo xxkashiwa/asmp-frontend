@@ -1,0 +1,24 @@
+/* 图表浅色主题样式 */
+.light-theme .recharts-wrapper .recharts-surface {
+  background-color: #ffffff;
+}
+
+.light-theme .stroke-muted\/20 {
+  stroke: rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .text-xs.text-white {
+  color: #333333 !important;
+}
+
+.light-theme .text-sm.text-white,
+.light-theme .text-lg.text-white,
+.light-theme .text-3xl.font-bold.fill-white,
+.light-theme .recharts-text.recharts-cartesian-axis-tick-value tspan {
+  color: #333333 !important;
+  fill: #333333 !important;
+}
+
+.light-theme .recharts-pie-label-text {
+  fill: #333333 !important;
+}

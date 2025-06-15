@@ -6,53 +6,83 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Notice } from '@/models/notice';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { NoticeForm } from './notice-form';
+import { NoticeForm, NoticeFormValues } from './notice-form';
 
 interface NoticeDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (data: Notice) => void;
-  notice?: Notice;
-  title: string;
-  description: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  onSubmit: (data: Notice) => Promise<void>;
+  initialData?: Notice;
+  mode: 'add' | 'edit';
 }
 
 export function NoticeDialog({
-  isOpen,
-  onClose,
+  open,
+  setOpen,
   onSubmit,
-  notice,
-  title,
-  description,
+  initialData,
+  mode,
 }: NoticeDialogProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (data: Notice) => {
-    setIsLoading(true);
+  const title = mode === 'add' ? '添加新通知' : '编辑通知';
+  const description =
+    mode === 'add'
+      ? '创建一条新的通知、公告或新闻'
+      : '编辑现有的通知、公告或新闻';
+
+  const handleSubmit = async (data: NoticeFormValues) => {
+    setIsSubmitting(true);
+
     try {
-      await onSubmit(data);
-      onClose();
-    } catch (error) {
-      console.error('Error submitting form:', error);
+      // 如果是编辑模式，保留原有ID
+      const submitData = {
+        ...(initialData || {}),
+        ...data,
+        id: initialData?.id || crypto.randomUUID(),
+      } as Notice;
+
+      await onSubmit(submitData);
+      setOpen(false);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
+  const handleCancel = () => {
+    if (!isSubmitting) {
+      setOpen(false);
+    }
+  };
+
+  const defaultValues = initialData || {
+    title: '',
+    content: '',
+    type: '' as any,
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <NoticeForm
-          initialData={notice}
-          onSubmit={handleSubmit}
-          onCancel={onClose}
-          isLoading={isLoading}
-        />
+
+        {isSubmitting ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="text-primary h-8 w-8 animate-spin" />
+          </div>
+        ) : (
+          <NoticeForm
+            defaultValues={defaultValues}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

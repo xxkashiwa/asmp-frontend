@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Alumni } from '@/models/alumni';
 import useAlumniStore from '@/stores/alumni-store';
 import React, { useEffect } from 'react';
@@ -6,28 +5,34 @@ import { toast } from 'sonner';
 import { AlumniTable } from './components/alumni-table/alumni-table';
 
 const AlumniManagement: React.FC = () => {
-  const { alumniList, fetchAlumniList } = useAlumniStore();
+  const { alumniList, fetchAlumniList, addAlumni, updateAlumni, deleteAlumni } =
+    useAlumniStore();
   useEffect(() => {
+    if (alumniList.length > 0) {
+      return;
+    }
     fetchAlumniList().catch(error => {
       console.error('Failed to fetch alumni data', error);
       toast.error('获取校友数据失败');
     });
-  }, [fetchAlumniList]);
-
+  }, [fetchAlumniList, alumniList.length]);
   const handleAddAlumni = async (data: Alumni): Promise<void> => {
     try {
+      // 调用store中的添加方法
+      addAlumni(data);
       toast.success('添加校友成功');
     } catch (error) {
       console.error('Failed to add alumni', error);
       toast.error('添加校友失败');
     }
   };
-
   const handleEditAlumni = async (
     studentId: string,
     data: Alumni
   ): Promise<void> => {
     try {
+      // 调用store中的更新方法
+      updateAlumni(studentId, data);
       toast.success('更新校友信息成功');
     } catch (error) {
       console.error('Failed to update alumni', error);
@@ -36,6 +41,8 @@ const AlumniManagement: React.FC = () => {
   };
   const handleDeleteAlumni = async (studentId: string): Promise<void> => {
     try {
+      // 调用store中的删除方法
+      deleteAlumni(studentId);
       toast.success('删除校友成功');
     } catch (error) {
       console.error('Failed to delete alumni', error);

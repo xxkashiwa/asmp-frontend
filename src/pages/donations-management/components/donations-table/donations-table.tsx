@@ -13,14 +13,8 @@ import { DataTable } from '@/components/ui/data-table/data-table';
 import { Donations } from '@/models/donations';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { getDonationColumns } from './donations-columns';
-import { DonationDialog } from './donations-dialog';
-
-// 搜索字段的中文映射
-const searchFieldLabels: Record<string, string> = {
-  name: '项目名称',
-  description: '描述',
-};
+import { getDonationsColumns } from './donations-columns';
+import { DonationsDialog } from './donations-dialog';
 
 interface DonationsTableProps {
   data: Donations[];
@@ -29,19 +23,27 @@ interface DonationsTableProps {
   onDeleteDonation: (id: string) => Promise<void>;
 }
 
-export function DonationTable({
+// 搜索字段的中文映射
+const searchFieldLabels: Record<string, string> = {
+  name: '名字',
+  description: '描述',
+  status: '状态',
+  category: '分类',
+};
+
+const DonationsTable = ({
   data,
   onAddDonation,
   onEditDonation,
   onDeleteDonation,
-}: DonationsTableProps) {
+}: DonationsTableProps) => {
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [donationToEdit, setDonationToEdit] = useState<Donations | undefined>(
     undefined
   );
-  const [donationToDelete, setDonationToDelete] = useState<Donations | undefined>(
-    undefined
-  );
+  const [donationToDelete, setDonationToDelete] = useState<
+    Donations | undefined
+  >(undefined);
 
   const handleEdit = (donation: Donations) => {
     setDonationToEdit(donation);
@@ -65,54 +67,55 @@ export function DonationTable({
     }
   };
 
-  const columns = getDonationColumns(handleEdit, handleDelete);
+  const columns = getDonationsColumns(handleEdit, handleDelete);
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={() => setOpenAddDialog(true)}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          添加捐赠项目
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-medium">捐赠项目</h2>
+        <Button
+          onClick={() => setOpenAddDialog(true)}
+          className="flex items-center gap-1"
+        >
+          <PlusCircle className="h-4 w-4" />
+          <span>添加捐赠项目</span>
         </Button>
       </div>
 
-      <DataTable
-        tableId="donation-table"
+      <DataTable<Donations, keyof Donations>
+        tableId="donations-table"
         columns={columns}
         data={data}
-        searchKeys={['name', 'description']}
-        searchLabel="搜索捐赠项目"
+        searchKey="name"
         searchFieldLabels={searchFieldLabels}
       />
 
-      {/* 添加捐赠记录对话框 */}
-      <DonationDialog
-        isOpen={openAddDialog}
-        onClose={() => setOpenAddDialog(false)}
+      <DonationsDialog
+        open={openAddDialog}
+        setOpen={setOpenAddDialog}
         onSubmit={onAddDonation}
-        title="添加捐赠项目"
-        description="添加捐赠项目，带 * 的字段为必填项。"
-      />
-      {/* 编辑捐赠记录对话框 */}
-      <DonationDialog
-        isOpen={!!donationToEdit}
-        onClose={() => setDonationToEdit(undefined)}
-        onSubmit={handleEditSubmit}
-        donation={donationToEdit}
-        title="编辑捐赠项目"
-        description="修改捐赠项目信息，带 * 的字段为必填项。"
+        mode="add"
       />
 
-      {/* 删除确认对话框 */}
+      {donationToEdit && (
+        <DonationsDialog
+          open={!!donationToEdit}
+          setOpen={() => setDonationToEdit(undefined)}
+          onSubmit={handleEditSubmit}
+          initialData={donationToEdit}
+          mode="edit"
+        />
+      )}
+
       <AlertDialog
         open={!!donationToDelete}
-        onOpenChange={open => !open && setDonationToDelete(undefined)}
+        onOpenChange={() => setDonationToDelete(undefined)}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>确认删除</AlertDialogTitle>
             <AlertDialogDescription>
-              您确定要删除 {donationToDelete?.name} 的捐赠项目吗？此操作无法撤销。
+              你确定要删除这个捐赠项目吗？这个操作不能撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -125,4 +128,6 @@ export function DonationTable({
       </AlertDialog>
     </div>
   );
-}
+};
+
+export default DonationsTable;

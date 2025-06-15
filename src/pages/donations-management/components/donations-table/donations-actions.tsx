@@ -3,24 +3,22 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Donations } from '@/models/donations';
-import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 
-interface DonationActionsProps {
-  donation: Donations;
+interface DonationsActionsProps {
+  row: Donations;
   onEdit: (donation: Donations) => void;
   onDelete: (donation: Donations) => void;
 }
 
-export function DonationActions({
-  donation,
+export function DonationsActions({
+  row,
   onEdit,
   onDelete,
-}: DonationActionsProps) {
+}: DonationsActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -30,15 +28,13 @@ export function DonationActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>操作</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onEdit(donation)}>
-          <Edit className="mr-2 h-4 w-4" />
-          编辑
+        <DropdownMenuItem onClick={() => onEdit(row)}>
+          <Pencil className="mr-2 h-4 w-4" />
+          <span>编辑</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onDelete(donation)}>
+        <DropdownMenuItem onClick={() => onDelete(row)}>
           <Trash className="mr-2 h-4 w-4" />
-          删除
+          <span>删除</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

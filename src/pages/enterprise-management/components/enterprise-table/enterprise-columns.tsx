@@ -1,44 +1,38 @@
-import { ColumnDef } from '@tanstack/react-table';
 import { Enterprise } from '@/models/enterprise';
+import { ColumnDef } from '@tanstack/react-table';
 import { EnterpriseActions } from './enterprise-actions';
 
-
 export const getEnterpriseColumns = (
-  handleEdit: (enterprise: Enterprise) => void,
-  handleDelete: (enterprise: Enterprise) => void,
+  onEditEnterprise: (enterprise: Enterprise) => void,
+  onDeleteEnterprise: (enterprise: Enterprise) => void
 ): ColumnDef<Enterprise>[] => [
-
   {
     accessorKey: 'name',
-    header: '企业名称',
+    header: '名字',
   },
   {
     accessorKey: 'field',
     header: '领域',
+    cell: ({ row }) => row.original.field || '未填写',
   },
   {
     accessorKey: 'address',
     header: '地址',
+    cell: ({ row }) => row.original.address || '未填写',
   },
   {
     accessorKey: 'contactPerson',
     header: '联系人',
-  },
-  {
-    accessorKey: 'addedAt',
-    header: '加入日期',
+    cell: ({ row }) => row.original.contactPerson || '未填写',
   },
   {
     id: 'actions',
-    cell: ({ row }) => {
-      const enterprise = row.original;
-      return (
-        <EnterpriseActions
-          enterprise={enterprise}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      );
-    },
+    cell: ({ row }) => (
+      <EnterpriseActions
+        row={row.original}
+        onEdit={onEditEnterprise}
+        onDelete={onDeleteEnterprise}
+      />
+    ),
   },
 ];
