@@ -1,6 +1,6 @@
 
 import { Notice }  from '@/models/notice'
-import { getAllNotice } from '@/services/notice-service';
+import {  getAllNotice } from '@/services/notice-service';
 import { create } from 'zustand';
 
 interface NoticeStoreState {
@@ -19,6 +19,7 @@ const useNoticeStore = create<NoticeStoreState>((set) => ({
       throw error;
     }
   },
+  
 }));
 
 export default useNoticeStore;

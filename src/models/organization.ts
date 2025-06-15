@@ -1,6 +1,6 @@
 import { Alumni, convertToAlumni } from './alumni';
 export interface Organization {
-  id: string;
+  id: string,
   addedAt: string;
   name: string;
   type: 'REGIONAL' | 'INDUSTRIAL' | 'INTEREST';
@@ -20,7 +20,7 @@ export const convertToOrganization = (data: any): Organization => {
     currentJob: 'None',
   };
   return {
-    id: data.id,
+    id: data.id??'',
     addedAt: data.addedAt,
     name: data.name,
     type: data.type,

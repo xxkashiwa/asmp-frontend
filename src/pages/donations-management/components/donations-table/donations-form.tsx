@@ -1,4 +1,3 @@
-// 导入必要的组件和工具
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -16,58 +15,71 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Donation } from '@/types';
+import { Donations } from '@/models/donations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-// 定义表单验证模式
 const formSchema = z.object({
-  donorName: z.string().min(1, '请输入捐赠人姓名'),
-  amount: z.coerce.number().min(0, '捐赠金额必须大于0'),
-  projectName: z.string().min(1, '请输入项目名称'),
-  donationDate: z.string().min(1, '请选择捐赠日期'),
-  purpose: z.string().min(1, '请输入捐赠目的'),
-  status: z.enum(['pending', 'completed', 'cancelled']),
-  thanksLetterSent: z.boolean(),
-  remarks: z.string().optional(),
+  id: z.string().optional(),
+  name: z.string().min(1, { message: '项目名称不能为空' }),
+  description: z.string(),
+  targetAmount: z.number().min(1, { message: '目标金额不能为空' }),
+  currentAmount: z.number(),
+  status: z.enum(['PENDING', 'CONFIRMED', 'CANCELED', 'REFUNDED', 'COMPLETED'], { required_error: '状态不能为空' }),
+  
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  category: z.string().optional(),
+  imageUrl: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  progress: z.number().optional(),
+  targetReached: z.boolean().optional(),
 });
 
 type DonationFormValues = z.infer<typeof formSchema>;
 
-// 定义组件属性接口
 interface DonationFormProps {
-  donation?: Donation;           // 可选的捐赠数据，用于编辑模式
-  onSubmit: (data: DonationFormValues) => void;  // 表单提交处理函数
+  initialData?: Donations;
+  onSubmit: (data: DonationFormValues) => void;
+  onCancel: () => void;
+  isLoading?: boolean;
 }
 
-// 捐赠表单组件
-export function DonationForm({ donation, onSubmit }: DonationFormProps) {
+export function DonationForm({
+  initialData,
+  onSubmit,
+  onCancel,
+  isLoading = false,
+}: DonationFormProps) {
   const form = useForm<DonationFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      donorName: donation?.donorName,
-      amount: donation?.amount,
-      projectName: donation?.projectName,
-      donationDate: donation?.donationDate,
-      purpose: donation?.purpose,
-      status: donation?.status,
-      thanksLetterSent: donation?.thanksLetterSent,
+      name: initialData?.name || '',
+      description: initialData?.description || '',
+      targetAmount: initialData?.targetAmount || 0,
+      currentAmount: initialData?.currentAmount || 0,
+      status: initialData?.status || 'PENDING',
+      targetReached: initialData?.targetReached || false,
+      startDate: initialData?.startDate || '',
+      endDate: initialData?.endDate || '',
+      category: initialData?.category || '',
+      imageUrl: initialData?.imageUrl || '',
     },
   });
 
   return (
     <Form {...form}>
-      {/* 表单主体，包含所有字段 */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="donorName"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>捐赠人姓名 *</FormLabel>
+              <FormLabel>项目名称 *</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="请输入项目名称" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -76,121 +88,163 @@ export function DonationForm({ donation, onSubmit }: DonationFormProps) {
 
         <FormField
           control={form.control}
-          name="amount"
+          name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>捐赠金额 *</FormLabel>
+              <FormLabel>描述 *</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input placeholder="请输入描述" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="projectName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>项目名称</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="donationDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>捐赠日期 *</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="purpose"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>捐赠目的 *</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>状态 *</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="targetAmount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>目标金额 *</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="选择状态" />
-                  </SelectTrigger>
+                  <Input type="number" placeholder="请输入目标金额" {...field} />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="pending">处理中</SelectItem>
-                  <SelectItem value="completed">已完成</SelectItem>
-                  <SelectItem value="cancelled">已取消</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="thanksLetterSent"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>感谢信已发送</FormLabel>
-              <FormControl>
-                <Select onValueChange={(value) => field.onChange(value === 'true')} defaultValue={field.value ? 'true' : 'false'}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="选择是否已发送感谢信" />
-                  </SelectTrigger>
+          <FormField
+            control={form.control}
+            name="currentAmount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>当前金额 *</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="请输入当前金额" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>状态 *</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="选择状态" />
+                    </SelectTrigger>
+                  </FormControl>
                   <SelectContent>
-                    <SelectItem value="true">是</SelectItem>
-                    <SelectItem value="false">否</SelectItem>
+                    <SelectItem value="PENDING">待处理</SelectItem>
+                    <SelectItem value="CONFIRMED">已确认</SelectItem>
+                    <SelectItem value="CANCELED">已取消</SelectItem>
+                    <SelectItem value="REFUNDED">已退款</SelectItem>
+                    <SelectItem value="COMPLETED">已完成</SelectItem>
                   </SelectContent>
                 </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="remarks"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>备注</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="targetReached"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>目标达成</FormLabel>
+                <FormControl>
+                  <Select onValueChange={(value) => field.onChange(value === 'true')} defaultValue={field.value ? 'true' : 'false'}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="选择是否达成目标" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="true">是</SelectItem>
+                      <SelectItem value="false">否</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <div className="flex justify-end">
-          <Button type="submit">提交</Button>
+          <FormField
+            control={form.control}
+            name="startDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>开始日期</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="endDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>结束日期</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>类别</FormLabel>
+                <FormControl>
+                  <Input placeholder="请输入类别" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>图片URL</FormLabel>
+                <FormControl>
+                  <Input placeholder="请输入图片URL" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
+            取消
+          </Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? '提交中...' : initialData ? '更新' : '添加'}
+          </Button>
         </div>
       </form>
     </Form>

@@ -12,7 +12,7 @@ import { NoticeForm } from './notice-form';
 interface NoticeDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Notice, 'id'>) => void;
+  onSubmit: (data: Notice) => void;
   notice?: Notice;
   title: string;
   description: string;
@@ -28,7 +28,7 @@ export function NoticeDialog({
 }: NoticeDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (data: Omit<Notice, 'id'>) => {
+  const handleSubmit = async (data: Notice) => {
     setIsLoading(true);
     try {
       await onSubmit(data);

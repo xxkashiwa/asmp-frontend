@@ -7,17 +7,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Donations } from '@/models/donations';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-import { Donation } from '@/types';
-
 interface DonationActionsProps {
-  row: Donation;
-  onEdit: (donation: Donation) => void;
-  onDelete: (donation: Donation) => void;
+  donation: Donations;
+  onEdit: (donation: Donations) => void;
+  onDelete: (donation: Donations) => void;
 }
 
-export function DonationActions({ row, onEdit, onDelete }: DonationActionsProps) {
+export function DonationActions({
+  donation,
+  onEdit,
+  onDelete,
+}: DonationActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -29,11 +32,11 @@ export function DonationActions({ row, onEdit, onDelete }: DonationActionsProps)
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>操作</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onEdit(row)}>
+        <DropdownMenuItem onClick={() => onEdit(donation)}>
           <Edit className="mr-2 h-4 w-4" />
           编辑
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onDelete(row)}>
+        <DropdownMenuItem onClick={() => onDelete(donation)}>
           <Trash className="mr-2 h-4 w-4" />
           删除
         </DropdownMenuItem>

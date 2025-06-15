@@ -20,9 +20,9 @@ import { Notice } from '@/models/notice';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Switch } from '@/components/ui/switch';
 
 const formSchema = z.object({
+  id: z.string(),
   title: z.string().min(1, '标题不能为空'),
   content: z.string().min(1, '内容不能为空'),
   type: z.enum(['news', 'announcement', 'notice'])

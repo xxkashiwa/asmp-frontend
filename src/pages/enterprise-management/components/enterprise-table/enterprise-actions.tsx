@@ -9,19 +9,20 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-import { Partnership } from '@/types';
+import { Enterprise } from '@/models/enterprise';
 
-interface PartnershipActionsProps {
-  partnership: Partnership;
-  onEdit: (partnership: Partnership) => void;
-  onDelete: (partnership: Partnership) => void;
+interface EnterpriseActionsProps {
+  enterprise: Enterprise;
+  onEdit: (enterprise: Enterprise) => void;
+  onDelete: (enterprise: Enterprise) => void;
 }
 
-export function PartnershipActions({
-  partnership,
+export function EnterpriseActions({
+
+  enterprise,
   onEdit,
   onDelete,
-}: PartnershipActionsProps) {
+}: EnterpriseActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,15 +33,15 @@ export function PartnershipActions({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>操作</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onEdit(partnership)}>
-          <Edit className="mr-2 h-4 w-4" />
-          编辑
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onDelete(partnership)}>
-          <Trash className="mr-2 h-4 w-4" />
-          删除
-        </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem onClick={() => onEdit(enterprise)}>
+        <Edit className="mr-2 h-4 w-4" />
+        编辑
+      </DropdownMenuItem>
+      <DropdownMenuItem onClick={() => onDelete(enterprise)}>
+        <Trash className="mr-2 h-4 w-4" />
+        删除
+      </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

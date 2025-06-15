@@ -5,34 +5,49 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Partnership } from '@/types';
-import { PartnershipForm } from './enterprise-form';
+import { Enterprise } from '@/models/enterprise';
+import { EnterpriseForm } from './enterprise-form';
 import { useState } from 'react';
-interface PartnershipDialogProps {
+interface EnterpriseDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Partnership, 'id'>) => void;
+  onSubmit: (data: Enterprise) => Promise<void>;
+  enterprise?: Enterprise;
   title: string;
   description: string;
-  partnership?: Partnership;
 }
 
-export function PartnershipDialog({
+export function EnterpriseDialog({
   isOpen,
   onClose,
   onSubmit,
+  enterprise,
   title,
   description,
-  partnership,
-}: PartnershipDialogProps) {
+}: EnterpriseDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const handleSubmit = async (data: Omit<Partnership, 'id'>) => {
+  const handleSubmit = async (data: {
+    id: string,
+    name: string;
+    field: string;
+    address: string;
+    contactPerson: string;
+    contactEmail: string;
+    contactPhone: string;
+    addedAt?: string;
+  }) => {
     setIsLoading(true);
     try {
-      await onSubmit(data);
+      // Ensure addedAt is always a string before passing to onSubmit
+      const enterpriseData = {
+        ...data,
+        addedAt: data.addedAt || new Date().toISOString(),
+      };
+      
+      await onSubmit(enterpriseData);
       onClose();
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Failed to submit enterprise:', error);
     } finally {
       setIsLoading(false);
     }
@@ -45,8 +60,8 @@ export function PartnershipDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <PartnershipForm
-          initialData={partnership}
+        <EnterpriseForm
+          initialData={enterprise}
           onSubmit={handleSubmit}
           onCancel={onClose}
           isLoading={isLoading}

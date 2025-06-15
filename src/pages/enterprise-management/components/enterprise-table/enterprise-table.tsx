@@ -10,103 +10,103 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
-import { Partnership } from '@/types';
+import { Enterprise } from '@/models/enterprise';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { getPartnershipColumns } from './enterprise-columns';
-import { PartnershipDialog } from './enterprise-dialog';
+import { getEnterpriseColumns } from './enterprise-columns';
+import { EnterpriseDialog } from './enterprise-dialog';
 
 // 搜索字段的中文映射
 const searchFieldLabels: Record<string, string> = {
-  name: '合作伙伴名称',
+  name: '企业名称',
   contactPerson: '联系人',
 };
 
-interface PartnershipTableProps {
-  data: Partnership[];
-  onAddPartnership: (data: Omit<Partnership, 'id'>) => Promise<void>;
-  onEditPartnership: (id: number, data: Omit<Partnership, 'id'>) => Promise<void>;
-  onDeletePartnership: (id: number) => Promise<void>;
+interface EnterpriseTableProps {
+  data: Enterprise[];
+  onAddEnterprise: (data: Enterprise) => Promise<void>;
+  onEditEnterprise: (id: string, data: Enterprise) => Promise<void>;
+  onDeleteEnterprise: (id: string) => Promise<void>;
 }
 
-export function PartnershipTable({
+export function EnterpriseTable({
   data,
-  onAddPartnership,
-  onEditPartnership,
-  onDeletePartnership,
-}: PartnershipTableProps) {
+  onAddEnterprise,
+  onEditEnterprise,
+  onDeleteEnterprise,
+}: EnterpriseTableProps) {
   const [openAddDialog, setOpenAddDialog] = useState(false);
-  const [partnershipToEdit, setPartnershipToEdit] = useState<Partnership | undefined>(undefined);
-  const [partnershipToDelete, setPartnershipToDelete] = useState<Partnership | undefined>(undefined);
+  const [enterpriseToEdit, setEnterpriseToEdit] = useState<Enterprise | undefined>(undefined);
+  const [enterpriseToDelete, setEnterpriseToDelete] = useState<Enterprise | undefined>(undefined);
 
-  const handleEdit = (partnership: Partnership) => {
-    setPartnershipToEdit(partnership);
+  const handleEdit = (enterprise: Enterprise) => {
+    setEnterpriseToEdit(enterprise);
   };
 
-  const handleDelete = (partnership: Partnership) => {
-    setPartnershipToDelete(partnership);
+  const handleDelete = (enterprise: Enterprise) => {
+    setEnterpriseToDelete(enterprise);
   };
 
-  const handleEditSubmit = async (formData: Omit<Partnership, 'id'>) => {
-    if (partnershipToEdit) {
-      await onEditPartnership(partnershipToEdit.id, formData);
-      setPartnershipToEdit(undefined);
+  const handleEditSubmit = async (formData: Enterprise) => {
+    if (enterpriseToEdit) {
+      await onEditEnterprise(enterpriseToEdit.id, formData);
+      setEnterpriseToEdit(undefined);
     }
   };
 
   const handleDeleteConfirm = async () => {
-    if (partnershipToDelete) {
-      await onDeletePartnership(partnershipToDelete.id);
-      setPartnershipToDelete(undefined);
+    if (enterpriseToDelete) {
+      await onDeleteEnterprise(enterpriseToDelete.id);
+      setEnterpriseToDelete(undefined);
     }
   };
 
-  const columns = getPartnershipColumns(handleEdit, handleDelete);
+  const columns = getEnterpriseColumns(handleEdit, handleDelete);
 
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button onClick={() => setOpenAddDialog(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          添加合作伙伴
+          添加企业
         </Button>
       </div>
 
       <DataTable
-        tableId="partnership-table"
+        tableId="enterprise-table"
         columns={columns}
         data={data}
         searchKeys={['name', 'contactPerson']}
-        searchLabel="搜索合作伙伴"
+        searchLabel="搜索企业"
         searchFieldLabels={searchFieldLabels}
       />
 
-      <PartnershipDialog
+      <EnterpriseDialog
         isOpen={openAddDialog}
         onClose={() => setOpenAddDialog(false)}
-        onSubmit={onAddPartnership}
-        title="添加合作伙伴"
-        description="请填写合作伙伴信息"
+        onSubmit={onAddEnterprise}
+        title="添加企业"
+        description="请填写企业信息"
       />
 
-      <PartnershipDialog
-        isOpen={!!partnershipToEdit}
-        onClose={() => setPartnershipToEdit(undefined)}
+      <EnterpriseDialog
+        isOpen={!!enterpriseToEdit}
+        onClose={() => setEnterpriseToEdit(undefined)}
         onSubmit={handleEditSubmit}
-        partnership={partnershipToEdit}
-        title="编辑合作伙伴"
-        description="请修改合作伙伴信息，带 * 的字段为必填项。"
+        enterprise={enterpriseToEdit}
+        title="编辑企业"
+        description="请修改企业信息，带 * 的字段为必填项。"
       />
 
       <AlertDialog
-        open={!!partnershipToDelete}
-        onOpenChange={open => !open && setPartnershipToDelete(undefined)}
+        open={!!enterpriseToDelete}
+        onOpenChange={open => !open && setEnterpriseToDelete(undefined)}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>确认删除</AlertDialogTitle>
             <AlertDialogDescription>
-              您确定要删除 {partnershipToDelete?.name} 的合作伙伴记录吗？此操作无法撤销。
+              您确定要删除 {enterpriseToDelete?.name} 的企业记录吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -1,5 +1,4 @@
 import request from '@/lib/request';
-
 import { Notice, convertToNotice } from '@/models/notice' 
 const endPoint = '/notice';
 
@@ -12,7 +11,7 @@ export const getAllNotice = async () => {
   return datas as Notice[];
 };
 
-export const getNoticeById = async (id: number) => {
+export const getNoticeById = async (id: string) => {
   const response = await request ({
     url: `${endPoint}/${id}`,
     method: 'GET',

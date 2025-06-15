@@ -10,48 +10,48 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
-import { Donation } from '@/types';
+import { Donations } from '@/models/donations';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import { getDonationColumns } from './donations-columns';
 import { DonationDialog } from './donations-dialog';
 
-interface DonationTableProps {
-  data: Donation[];
-  onAddDonation: (data: Omit<Donation, 'id'>) => Promise<void>;
-  onEditDonation: (id: number, data: Omit<Donation, 'id'>) => Promise<void>;
-  onDeleteDonation: (id: number) => Promise<void>;
-}
-
 // 搜索字段的中文映射
 const searchFieldLabels: Record<string, string> = {
-  donorName: '捐赠人',
-  projectName: '项目名称',
+  name: '项目名称',
+  description: '描述',
 };
+
+interface DonationsTableProps {
+  data: Donations[];
+  onAddDonation: (data: Donations) => Promise<void>;
+  onEditDonation: (id: string, data: Donations) => Promise<void>;
+  onDeleteDonation: (id: string) => Promise<void>;
+}
 
 export function DonationTable({
   data,
   onAddDonation,
   onEditDonation,
   onDeleteDonation,
-}: DonationTableProps) {
+}: DonationsTableProps) {
   const [openAddDialog, setOpenAddDialog] = useState(false);
-  const [donationToEdit, setDonationToEdit] = useState<Donation | undefined>(
+  const [donationToEdit, setDonationToEdit] = useState<Donations | undefined>(
     undefined
   );
-  const [donationToDelete, setDonationToDelete] = useState<Donation | undefined>(
+  const [donationToDelete, setDonationToDelete] = useState<Donations | undefined>(
     undefined
   );
 
-  const handleEdit = (donation: Donation) => {
+  const handleEdit = (donation: Donations) => {
     setDonationToEdit(donation);
   };
 
-  const handleDelete = (donation: Donation) => {
+  const handleDelete = (donation: Donations) => {
     setDonationToDelete(donation);
   };
 
-  const handleEditSubmit = async (formData: Omit<Donation, 'id'>) => {
+  const handleEditSubmit = async (formData: Donations) => {
     if (donationToEdit) {
       await onEditDonation(donationToEdit.id, formData);
       setDonationToEdit(undefined);
@@ -72,7 +72,7 @@ export function DonationTable({
       <div className="flex justify-end">
         <Button onClick={() => setOpenAddDialog(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          添加捐赠记录
+          添加捐赠项目
         </Button>
       </div>
 
@@ -80,8 +80,8 @@ export function DonationTable({
         tableId="donation-table"
         columns={columns}
         data={data}
-        searchKeys={['donorName', 'projectName',  ]}
-        searchLabel="搜索捐赠记录"
+        searchKeys={['name', 'description']}
+        searchLabel="搜索捐赠项目"
         searchFieldLabels={searchFieldLabels}
       />
 
@@ -90,8 +90,8 @@ export function DonationTable({
         isOpen={openAddDialog}
         onClose={() => setOpenAddDialog(false)}
         onSubmit={onAddDonation}
-        title="添加捐赠记录"
-        description="添加捐赠记录，带 * 的字段为必填项。"
+        title="添加捐赠项目"
+        description="添加捐赠项目，带 * 的字段为必填项。"
       />
       {/* 编辑捐赠记录对话框 */}
       <DonationDialog
@@ -99,8 +99,8 @@ export function DonationTable({
         onClose={() => setDonationToEdit(undefined)}
         onSubmit={handleEditSubmit}
         donation={donationToEdit}
-        title="编辑捐赠记录"
-        description="修改捐赠记录信息，带 * 的字段为必填项。"
+        title="编辑捐赠项目"
+        description="修改捐赠项目信息，带 * 的字段为必填项。"
       />
 
       {/* 删除确认对话框 */}
@@ -112,7 +112,7 @@ export function DonationTable({
           <AlertDialogHeader>
             <AlertDialogTitle>确认删除</AlertDialogTitle>
             <AlertDialogDescription>
-              您确定要删除 {donationToDelete?.donorName} 的捐赠记录吗？此操作无法撤销。
+              您确定要删除 {donationToDelete?.name} 的捐赠项目吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -1,6 +1,6 @@
 import { Organization, convertToOrganization } from './organization';
 export interface Activity {
-  id: string;
+  id: string,
   title: string;
   description: string;
   startTime: string;
@@ -30,7 +30,7 @@ export const convertToActivity = (data: any): Activity => {
     },
   };
   return {
-    id: data.id ?? '',
+    id: data.i??'',
     title: data.title ?? '',
     description: data.description ?? '',
     startTime: data.startTime ?? '',

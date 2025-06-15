@@ -18,8 +18,8 @@ import { NoticeDialog } from './notice-dialog';
 
 interface NoticeTableProps {
     data: Notice[];
-    onAddNotice: (data: Omit<Notice, 'id'>) => Promise<void>;
-    onEditNotice: (id: string, data: Omit<Notice, 'id'>) => Promise<void>;
+    onAddNotice: (data: Notice) => Promise<void>;
+    onEditNotice: (id: string, data: Notice) => Promise<void>;
     onDeleteNotice: (id: string) => Promise<void>;
 }
 const searchFieldLabels = {
@@ -28,7 +28,7 @@ const searchFieldLabels = {
     type: '类型',
 };
 
-export const NoticeTable = ({
+export  const NoticeTable = ({
     data,
     onAddNotice,
     onEditNotice,
@@ -45,7 +45,7 @@ export const NoticeTable = ({
     const handleDelete = (notice : Notice) => {
         setNoticeToDelete(notice);
     }
-    const handleEditSubmit = async (formData: Omit<Notice,'id'>) => {
+    const handleEditSubmit = async (formData: Notice) => {
         if (noticeToEdit) {
             await onEditNotice(noticeToEdit.id, formData);
             setNoticeToEdit(undefined);
@@ -116,4 +116,6 @@ export const NoticeTable = ({
             </AlertDialog>
         </div>
     )
-}
+};
+
+export default NoticeTable;
