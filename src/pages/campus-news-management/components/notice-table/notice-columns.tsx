@@ -1,6 +1,6 @@
 import { News } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
-import { NewsActions } from './news-actions';
+import { NewsActions } from './notice-actions';
 
 export const  getNewsColumns = (
     onEdit: (news: News) => void,

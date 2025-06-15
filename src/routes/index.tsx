@@ -4,12 +4,12 @@ import AlumniManagement from '../pages/alumni-management';
 import Login from '../pages/auth/login';
 import Register from '../pages/auth/register';
 import CampusNewsManagement from '../pages/campus-news-management';
-import DonationManagement from '../pages/donation-management';
+import DonationManagement from '../pages/donations-management';
 import EventManagement from '../pages/event-management';
 import Home from '../pages/home';
 import NotFound from '../pages/not-found';
 import OrganizationManagement from '../pages/organization-management';
-import PartnershipManagement from '../pages/partnership-management';
+import EnterpriseManagement from '../pages/enterprise-management';
 
 const routes: RouteObject[] = [
   {
@@ -53,8 +53,8 @@ const routes: RouteObject[] = [
         element: <DonationManagement />,
       },
       {
-        path: 'partnerships',
-        element: <PartnershipManagement />,
+        path: 'enterprises',
+        element: <EnterpriseManagement />,
       },
     ],
   },

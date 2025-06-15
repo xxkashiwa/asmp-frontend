@@ -13,8 +13,8 @@ import { DataTable } from '@/components/ui/data-table/data-table';
 import { Donation } from '@/types';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { getDonationColumns } from './donation-columns';
-import { DonationDialog } from './donation-dialog';
+import { getDonationColumns } from './donations-columns';
+import { DonationDialog } from './donations-dialog';
 
 interface DonationTableProps {
   data: Donation[];

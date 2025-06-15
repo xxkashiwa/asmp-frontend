@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Partnership } from '@/types';
-import { PartnershipActions } from './partnership-actions';
+import { PartnershipActions } from './enterprise-actions';
 
 
 export const getPartnershipColumns = (

@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog';
 import { News } from '@/types';
 import { useState } from 'react';
-import { NewsForm } from './news-form';
+import { NewsForm } from './notice-form';
 
 interface NewsDialogProps {
   isOpen: boolean;

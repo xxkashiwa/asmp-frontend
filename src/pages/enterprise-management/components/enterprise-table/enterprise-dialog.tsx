@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Partnership } from '@/types';
-import { PartnershipForm } from './partnership-form';
+import { PartnershipForm } from './enterprise-form';
 import { useState } from 'react';
 interface PartnershipDialogProps {
   isOpen: boolean;

@@ -13,8 +13,8 @@ import { DataTable } from '@/components/ui/data-table/data-table';
 import { News } from '@/types';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { getNewsColumns } from './news-columns';
-import { NewsDialog } from './news-dialog';
+import { getNewsColumns } from './notice-columns';
+import { NewsDialog } from './notice-dialog';
 
 interface NewsTableProps {
     data: News[];
