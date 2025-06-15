@@ -5,7 +5,7 @@ import AlumniManagement from '../pages/alumni-management';
 import Login from '../pages/auth/login';
 import Register from '../pages/auth/register';
 import CampusNewsManagement from '../pages/campus-news-management';
-import DonationManagement from '../pages/donation-management';
+import DonationsManagement from '../pages/donations-management';
 import EnterpriseManagement from '../pages/enterprise-management';
 import Home from '../pages/home';
 import NotFound from '../pages/not-found';
@@ -50,7 +50,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'donations',
-        element: <DonationManagement />,
+        element: <DonationsManagement />,
       },
       {
         path: 'enterprises',
