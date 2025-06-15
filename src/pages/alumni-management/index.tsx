@@ -1,4 +1,4 @@
-import { AlumniTable } from '@/pages/alumni-management/components/alumni-table/alumni-table';
+import { getAllAlumni } from '@/services/alumni-service';
 import useAlumniStore from '@/stores/alumni-store';
 import React, { useEffect } from 'react';
 import { toast } from 'sonner';
@@ -21,6 +21,12 @@ const AlumniManagement: React.FC = () => {
       toast.error('获取校友数据失败');
     });
   }, [fetchAlumniList]);
+
+  useEffect(() => {
+    getAllAlumni().then(data => {
+      console.log('Fetched alumni data:', data);
+    });
+  }, []);
 
   const handleAddAlumni = async (data: Omit<(typeof alumniList)[0], 'id'>) => {
     try {
@@ -69,7 +75,7 @@ const AlumniManagement: React.FC = () => {
           管理校友信息、校友档案、联系方式等内容
         </p>
 
-        {loading ? (
+        {/* {loading ? (
           <div className="flex h-64 items-center justify-center">
             <p>加载中...</p>
           </div>
@@ -80,7 +86,7 @@ const AlumniManagement: React.FC = () => {
             onEditAlumni={handleEditAlumni}
             onDeleteAlumni={handleDeleteAlumni}
           />
-        )}
+        )} */}
       </div>
     </div>
   );
