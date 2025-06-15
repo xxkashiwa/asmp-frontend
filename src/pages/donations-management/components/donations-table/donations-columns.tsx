@@ -1,6 +1,6 @@
 import { Donation } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
-import { DonationActions } from './donation-actions';
+import { DonationActions } from './donations-actions';
 
 export const getDonationColumns = (
   onEdit: (donation: Donation) => void,

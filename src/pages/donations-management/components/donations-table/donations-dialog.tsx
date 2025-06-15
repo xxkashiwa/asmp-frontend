@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Donation } from '@/types';
-import { DonationForm } from './donation-form';
+import { DonationForm } from './donations-form';
 
 interface DonationDialogProps {
   isOpen: boolean;

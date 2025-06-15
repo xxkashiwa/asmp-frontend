@@ -13,8 +13,8 @@ import { DataTable } from '@/components/ui/data-table/data-table';
 import { Partnership } from '@/types';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
-import { getPartnershipColumns } from './partnership-columns';
-import { PartnershipDialog } from './partnership-dialog';
+import { getPartnershipColumns } from './enterprise-columns';
+import { PartnershipDialog } from './enterprise-dialog';
 
 // 搜索字段的中文映射
 const searchFieldLabels: Record<string, string> = {
