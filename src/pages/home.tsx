@@ -11,17 +11,50 @@ import React, { useEffect, useState } from 'react';
 
 const Home: React.FC = () => {
   // Get data from stores
-  const { alumniList } = useAlumniStore();
-  const { donationsList } = useDonationsStore();
-  const { activities } = useActivityStore();
-  const { noticeList } = useNoticeStore();
-  const { enterpriseList } = useEnterpriseStore();
-  const { organizations } = useOrganizationStore();
+  const { alumniList, fetchAlumniList } = useAlumniStore();
+  const { donationsList, fetchDonationsList } = useDonationsStore();
+  const { activities, fetchActivities } = useActivityStore();
+  const { noticeList, fetchNoticeList } = useNoticeStore();
+  const { enterpriseList, fetchEnterpriseList } = useEnterpriseStore();
+  const { organizations, fetchOrganizations } = useOrganizationStore();
 
   // State for loading status
   const [isLoading, setIsLoading] = useState(true);
 
   // Delay to simulate loading and ensure data has loaded from stores
+  useEffect(()=>{
+    if(alumniList.length === 0) {
+      fetchAlumniList();
+    }
+  },[fetchAlumniList, alumniList]);
+  useEffect(()=>{
+    if(donationsList.length === 0) {
+      fetchDonationsList();
+    }
+  },[fetchDonationsList, donationsList]);
+  useEffect(()=>{
+    if(activities.length === 0) {
+      fetchActivities();
+    }
+  },[fetchActivities, activities]);
+  useEffect(()=>{
+    if(noticeList.length === 0) {
+      fetchNoticeList();
+    }
+  },[fetchNoticeList, noticeList]);
+  useEffect(()=>{
+    if(enterpriseList.length === 0) {
+      fetchEnterpriseList();
+    }
+  },[fetchEnterpriseList, enterpriseList]);
+  useEffect(()=>{
+    if(organizations.length === 0) {
+      fetchOrganizations();
+    }
+  },[fetchOrganizations, organizations]);
+
+
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
