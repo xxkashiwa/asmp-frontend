@@ -1,30 +1,37 @@
-import { OrganizationTable } from '@/pages/organization-management/components/organization-table/organization-table';
-import { Organization } from '@/types';
-import { useState } from 'react';
-import { mockOrganizationData } from './mock-data';
-
+import useOrganizationStore from '@/stores/organization-store';
+import { useEffect } from 'react';
 
 const OrganizationManagement: React.FC = () => {
-  const [organizations, setOrganizations] = useState<Organization[]>(mockOrganizationData);
+  // const [organizations, setOrganizations] = useState<Organization[]>(mockOrganizationData);
 
-  const handleAddOrganization = async (data: Omit<Organization, 'id'>) => {
-    const newOrganization: Organization = {
-      ...data,
-      id: organizations.length + 1,
-    };
-    setOrganizations(prev => [...prev, newOrganization]);
-  };
+  // const handleAddOrganization = async (data: Omit<Organization, 'id'>) => {
+  //   const newOrganization: Organization = {
+  //     ...data,
+  //     id: organizations.length + 1,
+  //   };
+  //   setOrganizations(prev => [...prev, newOrganization]);
+  // };
 
-  const handleEditOrganization = async (id: number, data: Omit<Organization, 'id'>) => {
-    setOrganizations(prev =>
-      prev.map(org => (org.id === id ? { ...org, ...data } : org)),
-    );
-  };
+  // const handleEditOrganization = async (id: number, data: Omit<Organization, 'id'>) => {
+  //   setOrganizations(prev =>
+  //     prev.map(org => (org.id === id ? { ...org, ...data } : org)),
+  //   );
+  // };
 
-  const handleDeleteOrganization = async (id: number) => {
-    setOrganizations(prev => prev.filter(org => org.id !== id));
-  };
+  // const handleDeleteOrganization = async (id: number) => {
+  //   setOrganizations(prev => prev.filter(org => org.id !== id));
+  // };
 
+  const { organizations, fetchOrganizations } = useOrganizationStore();
+
+  // 使用 useEffect 在组件挂载时获取组织数据
+  useEffect(() => {
+    fetchOrganizations().catch(error => {
+      console.error('获取组织数据失败', error);
+    });
+  }, [fetchOrganizations]);
+
+  console.log('组织数据:', organizations);
   return (
     <div className="w-full overflow-auto">
       <h1 className="mb-6 text-2xl font-bold">组织管理</h1>
@@ -33,12 +40,12 @@ const OrganizationManagement: React.FC = () => {
           管理校友会组织架构、分会信息、管理人员等内容
         </p>
 
-        <OrganizationTable
+        {/* <OrganizationTable
           data={organizations}
           onAddOrganization={handleAddOrganization}
           onEditOrganization={handleEditOrganization}
           onDeleteOrganization={handleDeleteOrganization}
-        />
+        /> */}
       </div>
     </div>
   );

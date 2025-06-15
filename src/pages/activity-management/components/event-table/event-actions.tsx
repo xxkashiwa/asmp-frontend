@@ -9,15 +9,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-import { Alumni } from '@/models/alumni';
+import { Event } from '@/types';
 
-interface AlumniActionsProps {
-  row: Alumni;
-  onEdit: (alumni: Alumni) => void;
-  onDelete: (alumni: Alumni) => void;
+interface EventActionsProps {
+  row: Event;
+  onEdit: (event: Event) => void;
+  onDelete: (event: Event) => void;
 }
 
-export function AlumniActions({ row, onEdit, onDelete }: AlumniActionsProps) {
+export function EventActions({ row, onEdit, onDelete }: EventActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -5,50 +5,33 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Alumni } from '@/models/alumni';
+import { Event } from '@/types';
+import { EventForm } from './event-form';
 import { useState } from 'react';
-import { AlumniForm } from './alumni-form';
 
-interface AlumniDialogProps {
+interface EventDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Alumni) => void;
-  alumni?: Alumni;
+  onSubmit: (data: Omit<Event, 'id'>) => Promise<void>;
   title: string;
   description: string;
+  event?: Event;
 }
 
-export function AlumniDialog({
+export function EventDialog({
   isOpen,
   onClose,
   onSubmit,
-  alumni,
   title,
   description,
-}: AlumniDialogProps) {
+  event,
+}: EventDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const handleSubmit = (data: {
-    studentId: string;
-    realName: string;
-    gender: 'MALE' | 'FEMALE';
-    dateOfBirth: string;
-    address?: string;
-    companyName?: string;
-    currentJob?: string;
-    addedAt?: string;
-  }) => {
+
+  const handleSubmit = async (data: Omit<Event, 'id'>) => {
     setIsLoading(true);
     try {
-      // Ensure addedAt is always a string before passing to onSubmit
-      const alumniData: Alumni = {
-        ...data,
-        addedAt: data.addedAt || new Date().toISOString(),
-        address: data.address || '',
-        companyName: data.companyName || '',
-        currentJob: data.currentJob || '',
-      };
-
-      onSubmit(alumniData);
+      await onSubmit(data);
       onClose();
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -64,8 +47,8 @@ export function AlumniDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <AlumniForm
-          initialData={alumni}
+        <EventForm
+          event={event}
           onSubmit={handleSubmit}
           onCancel={onClose}
           isLoading={isLoading}

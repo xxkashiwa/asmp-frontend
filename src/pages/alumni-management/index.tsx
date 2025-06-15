@@ -1,69 +1,45 @@
-import { getAllAlumni } from '@/services/alumni-service';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Alumni } from '@/models/alumni';
 import useAlumniStore from '@/stores/alumni-store';
 import React, { useEffect } from 'react';
 import { toast } from 'sonner';
+import { AlumniTable } from './components/alumni-table/alumni-table';
 
 const AlumniManagement: React.FC = () => {
-  // 使用 Zustand store 代替局部状态
-  const {
-    alumniList,
-    loading,
-    fetchAlumniList,
-    addAlumni,
-    updateAlumni,
-    deleteAlumni,
-  } = useAlumniStore();
-
+  const { alumniList, fetchAlumniList } = useAlumniStore();
   useEffect(() => {
-    // 组件挂载时从 store 获取数据
     fetchAlumniList().catch(error => {
       console.error('Failed to fetch alumni data', error);
       toast.error('获取校友数据失败');
     });
   }, [fetchAlumniList]);
 
-  useEffect(() => {
-    getAllAlumni().then(data => {
-      console.log('Fetched alumni data:', data);
-    });
-  }, []);
-
-  const handleAddAlumni = async (data: Omit<(typeof alumniList)[0], 'id'>) => {
+  const handleAddAlumni = async (data: Alumni): Promise<void> => {
     try {
-      await addAlumni(data);
       toast.success('添加校友成功');
-      return Promise.resolve();
     } catch (error) {
       console.error('Failed to add alumni', error);
       toast.error('添加校友失败');
-      return Promise.reject(error);
     }
   };
 
   const handleEditAlumni = async (
-    id: number,
-    data: Omit<(typeof alumniList)[0], 'id'>
-  ) => {
+    studentId: string,
+    data: Alumni
+  ): Promise<void> => {
     try {
-      await updateAlumni(id, data);
       toast.success('更新校友信息成功');
-      return Promise.resolve();
     } catch (error) {
       console.error('Failed to update alumni', error);
       toast.error('更新校友信息失败');
-      return Promise.reject(error);
     }
   };
-
-  const handleDeleteAlumni = async (id: number) => {
+  const handleDeleteAlumni = async (studentId: string): Promise<void> => {
     try {
-      await deleteAlumni(id);
       toast.success('删除校友成功');
-      return Promise.resolve();
     } catch (error) {
       console.error('Failed to delete alumni', error);
       toast.error('删除校友失败');
-      return Promise.reject(error);
     }
   };
 
@@ -75,10 +51,8 @@ const AlumniManagement: React.FC = () => {
           管理校友信息、校友档案、联系方式等内容
         </p>
 
-        {/* {loading ? (
-          <div className="flex h-64 items-center justify-center">
-            <p>加载中...</p>
-          </div>
+        {alumniList.length === 0 ? (
+          ''
         ) : (
           <AlumniTable
             data={alumniList}
@@ -86,7 +60,7 @@ const AlumniManagement: React.FC = () => {
             onEditAlumni={handleEditAlumni}
             onDeleteAlumni={handleDeleteAlumni}
           />
-        )} */}
+        )}
       </div>
     </div>
   );

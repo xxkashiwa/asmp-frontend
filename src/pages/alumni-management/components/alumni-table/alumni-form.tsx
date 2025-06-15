@@ -15,21 +15,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Alumni } from '@/types';
+import { Alumni } from '@/models/alumni';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const formSchema = z.object({
   studentId: z.string().min(1, '学号不能为空'),
-  name: z.string().min(1, '姓名不能为空'),
-  gender: z.string().min(1, '性别不能为空'),
-  school: z.string().min(1, '学院不能为空'),
-  major: z.string().min(1, '专业不能为空'),
-  graduationYear: z.string().min(1, '毕业年份不能为空'),
-  degree: z.string().min(1, '学位不能为空'),
-  currentCompany: z.string().optional(),
-  jobPosition: z.string().optional(),
+  realName: z.string().min(1, '姓名不能为空'),
+  gender: z.enum(['MALE', 'FEMALE'], { required_error: '性别不能为空' }),
+  dateOfBirth: z.string().min(1, '生日不能为空'),
+  address: z.string().optional(),
+  companyName: z.string().optional(),
+  currentJob: z.string().optional(),
+  addedAt: z.string().optional(),
 });
 
 type AlumniFormValues = z.infer<typeof formSchema>;
@@ -51,25 +50,23 @@ export function AlumniForm({
   const defaultValues: Partial<AlumniFormValues> = initialData
     ? {
         studentId: initialData.studentId,
-        name: initialData.name,
+        realName: initialData.realName,
         gender: initialData.gender,
-        school: initialData.school,
-        major: initialData.major,
-        graduationYear: initialData.graduationYear,
-        degree: initialData.degree,
-        currentCompany: initialData.currentCompany || '',
-        jobPosition: initialData.jobPosition || '',
+        dateOfBirth: initialData.dateOfBirth,
+        address: initialData.address || '',
+        companyName: initialData.companyName || '',
+        currentJob: initialData.currentJob || '',
+        addedAt: initialData.addedAt,
       }
     : {
         studentId: '',
-        name: '',
-        gender: '',
-        school: '',
-        major: '',
-        graduationYear: '',
-        degree: '',
-        currentCompany: '',
-        jobPosition: '',
+        realName: '',
+        gender: 'MALE',
+        dateOfBirth: '',
+        address: '',
+        companyName: '',
+        currentJob: '',
+        addedAt: new Date().toISOString(),
       };
 
   const form = useForm<AlumniFormValues>({
@@ -80,6 +77,7 @@ export function AlumniForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {' '}
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -96,7 +94,7 @@ export function AlumniForm({
           />
           <FormField
             control={form.control}
-            name="name"
+            name="realName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>姓名</FormLabel>
@@ -123,8 +121,8 @@ export function AlumniForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="男">男</SelectItem>
-                    <SelectItem value="女">女</SelectItem>
+                    <SelectItem value="MALE">男</SelectItem>
+                    <SelectItem value="FEMALE">女</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -133,12 +131,12 @@ export function AlumniForm({
           />
           <FormField
             control={form.control}
-            name="school"
+            name="dateOfBirth"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>学院</FormLabel>
+                <FormLabel>生日</FormLabel>
                 <FormControl>
-                  <Input placeholder="请输入学院" {...field} />
+                  <Input type="date" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -146,12 +144,12 @@ export function AlumniForm({
           />
           <FormField
             control={form.control}
-            name="major"
+            name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>专业</FormLabel>
+                <FormLabel>地址</FormLabel>
                 <FormControl>
-                  <Input placeholder="请输入专业" {...field} />
+                  <Input placeholder="请输入地址（选填）" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -159,12 +157,12 @@ export function AlumniForm({
           />
           <FormField
             control={form.control}
-            name="graduationYear"
+            name="companyName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>毕业年份</FormLabel>
+                <FormLabel>公司名</FormLabel>
                 <FormControl>
-                  <Input placeholder="请输入毕业年份" {...field} />
+                  <Input placeholder="请输入公司名（选填）" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -172,57 +170,18 @@ export function AlumniForm({
           />
           <FormField
             control={form.control}
-            name="degree"
+            name="currentJob"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>学位</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="选择学位" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="本科">本科</SelectItem>
-                    <SelectItem value="硕士">硕士</SelectItem>
-                    <SelectItem value="博士">博士</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="currentCompany"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>当前公司</FormLabel>
+                <FormLabel>工作名</FormLabel>
                 <FormControl>
-                  <Input placeholder="请输入当前公司（选填）" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="jobPosition"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>职位</FormLabel>
-                <FormControl>
-                  <Input placeholder="请输入职位（选填）" {...field} />
+                  <Input placeholder="请输入工作名（选填）" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-
         <div className="flex justify-end space-x-2 pt-4">
           <Button
             type="button"
