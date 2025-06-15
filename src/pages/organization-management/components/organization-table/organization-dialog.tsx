@@ -5,14 +5,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Organization } from '@/types';
-import { OrganizationForm } from './organization-form';
+import { Organization } from '@/models/organization';
 import { useState } from 'react';
+import { OrganizationForm } from './organization-form';
 
 interface OrganizationDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Organization, 'id'>) => void;
+  onSubmit: (data: Organization) => void;
   title: string;
   description: string;
   organization?: Organization;
@@ -27,7 +27,7 @@ export function OrganizationDialog({
   organization,
 }: OrganizationDialogProps) {
   const [isLoading, setIsloading] = useState(false);
-  const handleSubmit = async (data: Omit<Organization, 'id'>) => {
+  const handleSubmit = async (data: Organization) => {
     setIsloading(true);
     try {
       await onSubmit(data);

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
-import { Event } from '@/types';
+import { Activity } from '@/models/activity';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import { getEventColumns } from './event-columns';
@@ -18,16 +18,16 @@ import { EventDialog } from './event-dialog';
 
 // 搜索字段的中文映射
 const searchFieldLabels: Record<string, string> = {
-  title: '活动名称',
+  title: '活动标题',
   location: '地点',
-  organizer: '组织者'
+  'organizer.name': '组织者',
 };
 
 interface EventTableProps {
-  data: Event[];
-  onAddEvent: (data: Omit<Event, 'id'>) => Promise<void>;
-  onEditEvent: (id: number, data: Omit<Event, 'id'>) => Promise<void>;
-  onDeleteEvent: (id: number) => Promise<void>;
+  data: Activity[];
+  onAddEvent: (data: Omit<Activity, 'id'>) => Promise<void>;
+  onEditEvent: (id: string, data: Omit<Activity, 'id'>) => Promise<void>;
+  onDeleteEvent: (id: string) => Promise<void>;
 }
 
 export function EventTable({
@@ -37,18 +37,22 @@ export function EventTable({
   onDeleteEvent,
 }: EventTableProps) {
   const [openAddDialog, setOpenAddDialog] = useState(false);
-  const [eventToEdit, setEventToEdit] = useState<Event | undefined>(undefined);
-  const [eventToDelete, setEventToDelete] = useState<Event | undefined>(undefined);
+  const [eventToEdit, setEventToEdit] = useState<Activity | undefined>(
+    undefined
+  );
+  const [eventToDelete, setEventToDelete] = useState<Activity | undefined>(
+    undefined
+  );
 
-  const handleEdit = (event: Event) => {
+  const handleEdit = (event: Activity) => {
     setEventToEdit(event);
   };
 
-  const handleDelete = (event: Event) => {
+  const handleDelete = (event: Activity) => {
     setEventToDelete(event);
   };
 
-  const handleEditSubmit = async (formData: Omit<Event, 'id'>) => {
+  const handleEditSubmit = async (formData: Omit<Activity, 'id'>) => {
     if (eventToEdit) {
       await onEditEvent(eventToEdit.id, formData);
       setEventToEdit(undefined);
@@ -77,7 +81,7 @@ export function EventTable({
         tableId="event-table"
         columns={columns}
         data={data}
-        searchKeys={['title',  'location',  'organizer']}
+        searchKeys={['title', 'location', 'organizer.name']}
         searchLabel="搜索活动"
         searchFieldLabels={searchFieldLabels}
       />

@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-import { Organization } from '@/types';
+import { Organization } from '@/models/organization';
 
 interface OrganizationActionsProps {
   row: Organization;
@@ -17,7 +17,11 @@ interface OrganizationActionsProps {
   onDelete: (organization: Organization) => void;
 }
 
-export function OrganizationActions({ row, onEdit, onDelete }: OrganizationActionsProps) {
+export function OrganizationActions({
+  row,
+  onEdit,
+  onDelete,
+}: OrganizationActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

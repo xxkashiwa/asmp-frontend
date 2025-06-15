@@ -1,27 +1,9 @@
+import { Organization } from '@/models/organization';
 import useOrganizationStore from '@/stores/organization-store';
 import { useEffect } from 'react';
+import { OrganizationTable } from './components/organization-table/organization-table';
 
 const OrganizationManagement: React.FC = () => {
-  // const [organizations, setOrganizations] = useState<Organization[]>(mockOrganizationData);
-
-  // const handleAddOrganization = async (data: Omit<Organization, 'id'>) => {
-  //   const newOrganization: Organization = {
-  //     ...data,
-  //     id: organizations.length + 1,
-  //   };
-  //   setOrganizations(prev => [...prev, newOrganization]);
-  // };
-
-  // const handleEditOrganization = async (id: number, data: Omit<Organization, 'id'>) => {
-  //   setOrganizations(prev =>
-  //     prev.map(org => (org.id === id ? { ...org, ...data } : org)),
-  //   );
-  // };
-
-  // const handleDeleteOrganization = async (id: number) => {
-  //   setOrganizations(prev => prev.filter(org => org.id !== id));
-  // };
-
   const { organizations, fetchOrganizations } = useOrganizationStore();
 
   // 使用 useEffect 在组件挂载时获取组织数据
@@ -31,7 +13,21 @@ const OrganizationManagement: React.FC = () => {
     });
   }, [fetchOrganizations]);
 
-  console.log('组织数据:', organizations);
+  const handleAddOrganization = async (data: Organization) => {
+    // 实现添加组织的逻辑
+    console.log('添加组织:', data);
+  };
+
+  const handleEditOrganization = async (id: string, data: Organization) => {
+    // 实现编辑组织的逻辑
+    console.log('编辑组织:', id, data);
+  };
+
+  const handleDeleteOrganization = async (id: string) => {
+    // 实现删除组织的逻辑
+    console.log('删除组织:', id);
+  };
+
   return (
     <div className="w-full overflow-auto">
       <h1 className="mb-6 text-2xl font-bold">组织管理</h1>
@@ -40,12 +36,12 @@ const OrganizationManagement: React.FC = () => {
           管理校友会组织架构、分会信息、管理人员等内容
         </p>
 
-        {/* <OrganizationTable
+        <OrganizationTable
           data={organizations}
           onAddOrganization={handleAddOrganization}
           onEditOrganization={handleEditOrganization}
           onDeleteOrganization={handleDeleteOrganization}
-        /> */}
+        />
       </div>
     </div>
   );

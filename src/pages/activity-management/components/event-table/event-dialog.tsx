@@ -5,17 +5,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Event } from '@/types';
-import { EventForm } from './event-form';
+import { Activity } from '@/models/activity';
 import { useState } from 'react';
+import { EventForm } from './event-form';
 
 interface EventDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Event, 'id'>) => Promise<void>;
+  onSubmit: (data: Omit<Activity, 'id'>) => Promise<void>;
   title: string;
   description: string;
-  event?: Event;
+  event?: Activity;
 }
 
 export function EventDialog({
@@ -28,7 +28,7 @@ export function EventDialog({
 }: EventDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (data: Omit<Event, 'id'>) => {
+  const handleSubmit = async (data: Omit<Activity, 'id'>) => {
     setIsLoading(true);
     try {
       await onSubmit(data);

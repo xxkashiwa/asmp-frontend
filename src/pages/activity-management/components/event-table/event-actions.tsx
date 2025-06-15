@@ -9,12 +9,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-import { Event } from '@/types';
+import { Activity } from '@/models/activity';
 
 interface EventActionsProps {
-  row: Event;
-  onEdit: (event: Event) => void;
-  onDelete: (event: Event) => void;
+  row: Activity;
+  onEdit: (event: Activity) => void;
+  onDelete: (event: Activity) => void;
 }
 
 export function EventActions({ row, onEdit, onDelete }: EventActionsProps) {

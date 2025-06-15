@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table/data-table';
-import { Organization } from '@/types';
+import { Organization } from '@/models/organization';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import { getOrganizationColumns } from './organization-columns';
@@ -18,16 +18,17 @@ import { OrganizationDialog } from './organization-dialog';
 
 // 搜索字段的中文映射
 const searchFieldLabels: Record<string, string> = {
-  name: '组织名称',
-  location: '地点',
-  leader: '负责人'
+  name: '名字',
+  type: '类型',
+  description: '描述',
+  state: '状态',
 };
 
 interface OrganizationTableProps {
   data: Organization[];
-  onAddOrganization: (data: Omit<Organization, 'id'>) => Promise<void>;
-  onEditOrganization: (id: number, data: Omit<Organization, 'id'>) => Promise<void>;
-  onDeleteOrganization: (id: number) => Promise<void>;
+  onAddOrganization: (data: Organization) => Promise<void>;
+  onEditOrganization: (id: string, data: Organization) => Promise<void>;
+  onDeleteOrganization: (id: string) => Promise<void>;
 }
 
 export function OrganizationTable({
@@ -37,8 +38,12 @@ export function OrganizationTable({
   onDeleteOrganization,
 }: OrganizationTableProps) {
   const [openAddDialog, setOpenAddDialog] = useState(false);
-  const [organizationToEdit, setOrganizationToEdit] = useState<Organization | undefined>(undefined);
-  const [organizationToDelete, setOrganizationToDelete] = useState<Organization | undefined>(undefined);
+  const [organizationToEdit, setOrganizationToEdit] = useState<
+    Organization | undefined
+  >(undefined);
+  const [organizationToDelete, setOrganizationToDelete] = useState<
+    Organization | undefined
+  >(undefined);
 
   const handleEdit = (organization: Organization) => {
     setOrganizationToEdit(organization);
@@ -47,8 +52,7 @@ export function OrganizationTable({
   const handleDelete = (organization: Organization) => {
     setOrganizationToDelete(organization);
   };
-
-  const handleEditSubmit = async (formData: Omit<Organization, 'id'>) => {
+  const handleEditSubmit = async (formData: Organization) => {
     if (organizationToEdit) {
       await onEditOrganization(organizationToEdit.id, formData);
       setOrganizationToEdit(undefined);
@@ -77,7 +81,7 @@ export function OrganizationTable({
         tableId="organization-table"
         columns={columns}
         data={data}
-        searchKeys={['name', 'location',  'leader']}
+        searchKeys={['name', 'type', 'description', 'state']}
         searchLabel="搜索组织"
         searchFieldLabels={searchFieldLabels}
       />
@@ -107,7 +111,8 @@ export function OrganizationTable({
           <AlertDialogHeader>
             <AlertDialogTitle>确认删除</AlertDialogTitle>
             <AlertDialogDescription>
-              您确定要删除 {organizationToDelete?.name} 的组织记录吗？此操作无法撤销。
+              您确定要删除 {organizationToDelete?.name}{' '}
+              的组织记录吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

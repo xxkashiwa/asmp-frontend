@@ -16,11 +16,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Organization } from '@/models/organization';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-
-import { Organization } from '@/models/organization';
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -57,16 +56,17 @@ export function OrganizationForm({
     state: 'ACTIVE',
     addedAt: new Date().toISOString(),
   };
+
   const form = useForm<OrganizationFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
   const handleFormSubmit = (data: OrganizationFormValues) => {
-    // Ensure required fields are present for the Organization type
+    // Add creator if it doesn't exist (for new organizations)
     const formData = {
       ...data,
-      id: data.id || crypto.randomUUID(), // Generate a UUID if no ID exists
+      id: data.id || '',
       addedAt: data.addedAt || new Date().toISOString(),
       creator: data.creator || null,
     } as Organization;
@@ -81,7 +81,6 @@ export function OrganizationForm({
         className="space-y-4"
       >
         <div className="grid grid-cols-2 gap-4">
-          {' '}
           <FormField
             control={form.control}
             name="name"
@@ -89,12 +88,13 @@ export function OrganizationForm({
               <FormItem>
                 <FormLabel>名字</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input placeholder="请输入组织名称" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="type"
@@ -120,6 +120,7 @@ export function OrganizationForm({
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="description"
@@ -127,12 +128,17 @@ export function OrganizationForm({
               <FormItem className="col-span-2">
                 <FormLabel>描述</FormLabel>
                 <FormControl>
-                  <Textarea {...field} />
+                  <Textarea
+                    placeholder="请输入组织描述"
+                    className="min-h-[100px]"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="state"
@@ -156,21 +162,9 @@ export function OrganizationForm({
                 <FormMessage />
               </FormItem>
             )}
-          />{' '}
-          <FormField
-            control={form.control}
-            name="addedAt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>添加时间</FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} disabled />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
           />
         </div>
+
         <div className="flex justify-end space-x-2 pt-4">
           <Button
             type="button"
