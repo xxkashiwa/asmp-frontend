@@ -5,30 +5,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { News } from '@/types';
+import { Notice } from '@/models/notice';
 import { useState } from 'react';
-import { NewsForm } from './notice-form';
+import { NoticeForm } from './notice-form';
 
-interface NewsDialogProps {
+interface NoticeDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<News, 'id'>) => void;
-  news?: News;
+  onSubmit: (data: Omit<Notice, 'id'>) => void;
+  notice?: Notice;
   title: string;
   description: string;
 }
 
-export function NewsDialog({
+export function NoticeDialog({
   isOpen,
   onClose,
   onSubmit,
-  news,
+  notice,
   title,
   description,
-}: NewsDialogProps) {
+}: NoticeDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (data: Omit<News, 'id'>) => {
+  const handleSubmit = async (data: Omit<Notice, 'id'>) => {
     setIsLoading(true);
     try {
       await onSubmit(data);
@@ -47,8 +47,8 @@ export function NewsDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <NewsForm
-          initialData={news}
+        <NoticeForm
+          initialData={notice}
           onSubmit={handleSubmit}
           onCancel={onClose}
           isLoading={isLoading}
