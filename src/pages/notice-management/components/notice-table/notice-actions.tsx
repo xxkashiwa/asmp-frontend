@@ -9,15 +9,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-import { News } from '@/types';
+import { Notice } from '@/models/notice';
 
-interface NewsActionsProps {
-  row: News;
-  onEdit: (news: News) => void;
-  onDelete: (news: News) => void;
+interface NoticeActionsProps {
+  row: Notice;
+  onEdit: (notice: Notice) => void;
+  onDelete: (notice: Notice) => void;
 }
 
-export function NewsActions({row, onEdit, onDelete}: NewsActionsProps){
+export function NoticeActions({row, onEdit, onDelete}: NoticeActionsProps){
     return(
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

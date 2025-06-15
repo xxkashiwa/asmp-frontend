@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
   { title: '校友管理', path: '/alumni', icon: <Users className="w-4 h-4" /> },
   { title: '组织管理', path: '/organizations', icon: <Building2 className="w-4 h-4" /> },
   { title: '活动管理', path: '/events', icon: <Calendar className="w-4 h-4" /> },
-  { title: '高校动态', path: '/campus-news', icon: <Newspaper className="w-4 h-4" /> },
+  { title: '高校动态', path: '/notices', icon: <Newspaper className="w-4 h-4" /> },
   { title: '捐赠管理', path: '/donations', icon: <Gift className="w-4 h-4" /> },
   { title: '合作伙伴', path: '/enterprises', icon: <Handshake className="w-4 h-4" /> },
 ];
